@@ -127,7 +127,7 @@
 ```console
 $ docker run -v $(pwd):/app -e APP_KEY=$soda_token -it bigdata1:1.0 python -m main --page_size=3 --num_pages=2 
 ```
-```json
+```console
 {   0: [   {   'amount_due': '0',
                'county': 'BK',
                'fine_amount': '50',

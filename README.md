@@ -105,7 +105,13 @@
           pages[page] = page_response
           print(pd.DataFrame(page_response))
       return pages
+      
+  def output_results(pages):
+    with open('results.json', 'w', encoding='utf-8') as f:
+        json.dump(data, f, ensure_ascii=False, indent=4)
   ```
+  
+  
 
 ## Part 2: Loading into ElasticSearch	
 

@@ -2,6 +2,24 @@
 
 ## Part 1: Python Scripting	
 
+### File Structure
+
+  ```console
+  $ tree
+  ```
+
+  ```console
+  .
+  ├── Dockerfile
+  ├── main.py
+  ├── requirements.txt
+  └── src
+      └── bigdata1
+          └── api.py
+
+  2 directories, 4 files
+  ```
+
 ### Packages 
 - Specified in `requirements.txt`
   - `requests`
@@ -34,9 +52,9 @@
   
     - `-t bigdata1:1.0`
     
-    ```console
-    $ docker build -t bigdata1:1.0 .
-    ```
+      ```console
+      $ docker build -t bigdata1:1.0 .
+      ```
 
   - `docker run`
   

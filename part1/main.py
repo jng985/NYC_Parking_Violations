@@ -15,10 +15,6 @@ if __name__ == "__main__":
     parser.add_argument("--num_pages", default=4, type=int)
     parser.add_argument("--output", default=None)
     args = parser.parse_args()
-<<<<<<< HEAD
-    # print(args)
-=======
->>>>>>> 8ab5e7b881b58f9e45791845a1ab2f6d5ef9a988
 
     response = get_results(args.page_size, args.num_pages)
     

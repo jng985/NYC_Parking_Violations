@@ -2,19 +2,19 @@
 
 ## Part 1: Python Scripting	
 
-### Packages in `requirements.txt`
-
-- `requests`
-- `pandas`
-- `numpy`
-- `sklearn`
-- `pytest`
-- `pyyaml`
-- `matplotlib`
-- `pygithub`
-- `scipy`
-- `sodapy`
-- `pprint`
+### Packages 
+- Specified in `requirements.txt`
+  - `requests`
+  - `pandas`
+  - `numpy`
+  - `sklearn`
+  - `pytest`
+  - `pyyaml`
+  - `matplotlib`
+  - `pygithub`
+  - `scipy`
+  - `sodapy`
+  - `pprint`
 
 ### Docker
 
@@ -32,9 +32,11 @@
 
   - `docker build`
   
-  ```console
-  $ docker build -t bigdata1:1.0 .
-  ```
+    - `-t bigdata1:1.0`
+    
+    ```console
+    $ docker build -t bigdata1:1.0 .
+    ```
 
   - `docker run`
   
@@ -42,15 +44,16 @@
     - `-e APP_KEY={Insert Token Here}`
     - `-it bigdata1:1.0 /bin/bash`
     
-  ```console
-  $ docker run -v $(pwd):/app -e APP_KEY=$soda_token -it bigdata1:1.0 /bin/bash
-  ```
-  ```console
-  $ docker run -v $(pwd):/app -e APP_KEY=$soda_token -it bigdata1:1.0 python -m main.py
-  ```
-  ```console
-  $ docker run -v $(pwd):/app -e APP_KEY=$soda_token -it bigdata1:1.0 python -m main.py --page_size=10
-  ```
+    
+      ```console
+      $ docker run -v $(pwd):/app -e APP_KEY=$soda_token -it bigdata1:1.0 /bin/bash
+      ```
+      ```console
+      $ docker run -v $(pwd):/app -e APP_KEY=$soda_token -it bigdata1:1.0 python -m main.py
+      ```
+      ```console
+      $ docker run -v $(pwd):/app -e APP_KEY=$soda_token -it bigdata1:1.0 python -m main.py --page_size=10
+      ```
   
   `$soda_token` = environment variable set in `.bash_profile`
   

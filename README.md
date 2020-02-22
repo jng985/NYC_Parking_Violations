@@ -60,6 +60,7 @@
   
     - `-v $(pwd):/app`
     - `-e APP_KEY={Insert Token Here}`
+      - `$soda_token` = environment variable set in `.bash_profile`
     - `-it bigdata1:1.0 /bin/bash`
     
     
@@ -67,13 +68,8 @@
       $ docker run -v $(pwd):/app -e APP_KEY=$soda_token -it bigdata1:1.0 /bin/bash
       ```
       ```console
-      $ docker run -v $(pwd):/app -e APP_KEY=$soda_token -it bigdata1:1.0 python -m main.py
+      $ docker run -v $(pwd):/app -e APP_KEY=$soda_token -it bigdata1:1.0 python -m main
       ```
-      ```console
-      $ docker run -v $(pwd):/app -e APP_KEY=$soda_token -it bigdata1:1.0 python -m main.py --page_size=10
-      ```
-  
-  `$soda_token` = environment variable set in `.bash_profile`
   
 ### Python Scripts
 
@@ -111,12 +107,27 @@
           json.dump(results, f, ensure_ascii=False, indent=4)
   ```
   
-### Example
+### Usage
+
+#### Arguments
+
+- `--page_size`: 
+  - Required 
+  - How many records to request from the API per call.
+- `--num_pages`: 
+  - Optional
+  - If not provided, continue requesting data until the entirety of the content has been exhausted. 
+  - If provided, continue querying for data `num_pages` times.
+- `--output`: 
+  - Optional 
+  - If not provided, print results to stdout. 
+  - If provided, write the data to the file `output`.
+
 
 ```console
 $ docker run -v $(pwd):/app -e APP_KEY=$soda_token -it bigdata1:1.0 python -m main --page_size=3 --num_pages=2 
 ```
-```console
+```json
 {   0: [   {   'amount_due': '0',
                'county': 'BK',
                'fine_amount': '50',

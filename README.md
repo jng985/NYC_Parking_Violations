@@ -2,23 +2,21 @@
 
 ## Part 1: Python Scripting	
 
-- `requirements.txt`
+### Packages in `requirements.txt`
 
-```
-`requests`
-`pandas`
-`numpy`
-`sklearn`
-`pytest`
-`pyyaml`
-`matplotlib`
-`pygithub`
-`scipy`
-`sodapy`
-`pprint`
-```
+- `requests`
+- `pandas`
+- `numpy`
+- `sklearn`
+- `pytest`
+- `pyyaml`
+- `matplotlib`
+- `pygithub`
+- `scipy`
+- `sodapy`
+- `pprint`
 
-- Docker
+### Docker
 
   - `Dockerfile`
 
@@ -54,7 +52,7 @@
   $ docker run -v $(pwd):/app -e APP_KEY=$soda_token -it bigdata1:1.0 python -m main.py --page_size=10
   ```
   
-  `$soda_token` = environment variable in `.bash_profile`
+  `$soda_token` = environment variable set in `.bash_profile`
   
     
 

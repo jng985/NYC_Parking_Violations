@@ -5,32 +5,32 @@
 - `requirements.txt`
 
 ```
-requests
-pandas
-numpy
-sklearn
-pytest
-pyyaml
-matplotlib
-pygithub
-scipy
-sodapy
-pprint
+`requests`
+`pandas`
+`numpy`
+`sklearn`
+`pytest`
+`pyyaml`
+`matplotlib`
+`pygithub`
+`scipy`
+`sodapy`
+`pprint`
 ```
 
 - Docker
 
   - `Dockerfile`
 
-```
-FROM python:3.7
+  ```
+  FROM python:3.7
 
-WORKDIR /app
+  WORKDIR /app
 
-COPY requirements.txt /app
+  COPY requirements.txt /app
 
-RUN pip install -r requirements.txt
-```
+  RUN pip install -r requirements.txt
+  ```
 
   - `docker build`
   

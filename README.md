@@ -75,8 +75,37 @@
   
   `$soda_token` = environment variable set in `.bash_profile`
   
-    
+### Python Scripts
 
+`main.py`
+  ```py
+  if __name__ == "__main__":
+      kwargs  = {}
+      for arg in sys.argv[1:]:
+          key, value = arg.split('=')
+          kwargs[key] = value 
+
+      print(kwargs)
+      page_size = kwargs['--page_size']
+      response = get_results(page_size)
+
+      pprint.pprint(response)
+  ```
+
+`src/bigdata1/api.py`
+  ```py
+  data_id = 'nc67-uf89'
+  client = Socrata('data.cityofnewyork.us', os.environ.get("APP_KEY"))
+
+  def get_results(page_size, num_pages=4, output=None):
+      pages = {}
+      for page in range(num_pages):
+          offset = page * page_size
+          page_response = client.get(data_id, limit=page_size, offset=offset)
+          pages[page] = page_response
+          print(pd.DataFrame(page_response))
+      return pages
+  ```
 
 ## Part 2: Loading into ElasticSearch	
 

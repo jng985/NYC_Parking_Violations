@@ -60,7 +60,6 @@
   
     - `-v $(pwd):/app`
     - `-e APP_KEY={Insert Token Here}`
-      - `$soda_token` = environment variable set in `.bash_profile`
     - `-it bigdata1:1.0 /bin/bash`
     
     
@@ -70,6 +69,8 @@
       ```console
       $ docker run -v $(pwd):/app -e APP_KEY=$soda_token -it bigdata1:1.0 python -m main
       ```
+      
+    - `$soda_token` = environment variable set in `.bash_profile`
   
 ### Python Scripts
 

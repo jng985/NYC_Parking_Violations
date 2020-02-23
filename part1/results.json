@@ -1,0 +1,138 @@
+{
+    "results": [
+        {
+            "plate": "JJFT37",
+            "state": "FL",
+            "license_type": "PAS",
+            "summons_number": "8638337991",
+            "issue_date": "08/17/2018",
+            "violation_time": "05:43P",
+            "violation": "NO STANDING-DAY/TIME LIMITS",
+            "fine_amount": "115",
+            "penalty_amount": "30",
+            "interest_amount": "0",
+            "reduction_amount": "20",
+            "payment_amount": "125",
+            "amount_due": "0",
+            "precinct": "006",
+            "county": "NY",
+            "issuing_agency": "TRAFFIC",
+            "summons_image": {
+                "url": "http://nycserv.nyc.gov/NYCServWeb/ShowImage?searchID=VDBSWmVrOUVUWHBPZW1zMVRWRTlQUT09&locationName=_____________________",
+                "description": "View Summons"
+            }
+        },
+        {
+            "plate": "ASX3866",
+            "state": "NY",
+            "license_type": "SRF",
+            "summons_number": "8613632415",
+            "issue_date": "11/27/2018",
+            "violation_time": "12:17P",
+            "violation": "NO PARKING-STREET CLEANING",
+            "fine_amount": "45",
+            "penalty_amount": "0",
+            "interest_amount": "0",
+            "reduction_amount": "0",
+            "payment_amount": "45",
+            "amount_due": "0",
+            "precinct": "071",
+            "county": "K",
+            "issuing_agency": "TRAFFIC",
+            "violation_status": "HEARING HELD-GUILTY",
+            "summons_image": {
+                "url": "http://nycserv.nyc.gov/NYCServWeb/ShowImage?searchID=VDBSWmVFMTZXWHBOYWxGNFRsRTlQUT09&locationName=_____________________",
+                "description": "View Summons"
+            }
+        },
+        {
+            "plate": "HTM7725",
+            "state": "NY",
+            "license_type": "OMS",
+            "summons_number": "8613632439",
+            "issue_date": "11/27/2018",
+            "violation_time": "12:21P",
+            "violation": "NO PARKING-STREET CLEANING",
+            "fine_amount": "45",
+            "penalty_amount": "0",
+            "interest_amount": "0",
+            "reduction_amount": "0",
+            "payment_amount": "45",
+            "amount_due": "0",
+            "precinct": "071",
+            "county": "K",
+            "issuing_agency": "TRAFFIC",
+            "summons_image": {
+                "url": "http://nycserv.nyc.gov/NYCServWeb/ShowImage?searchID=VDBSWmVFMTZXWHBOYWxGNlQxRTlQUT09&locationName=_____________________",
+                "description": "View Summons"
+            }
+        },
+        {
+            "plate": "EGM4552",
+            "state": "NY",
+            "license_type": "PAS",
+            "summons_number": "8012893095",
+            "issue_date": "04/25/2015",
+            "violation_time": "04:08P",
+            "violation": "INSP. STICKER-EXPIRED/MISSING",
+            "judgment_entry_date": "08/13/2015",
+            "fine_amount": "65",
+            "penalty_amount": "60",
+            "interest_amount": "39.09",
+            "reduction_amount": "0",
+            "payment_amount": "164.09",
+            "amount_due": "0",
+            "precinct": "105",
+            "county": "Q",
+            "issuing_agency": "TRAFFIC",
+            "summons_image": {
+                "url": "http://nycserv.nyc.gov/NYCServWeb/ShowImage?searchID=VDBSQmVFMXFaelZOZWtFMVRsRTlQUT09&locationName=_____________________",
+                "description": "View Summons"
+            }
+        },
+        {
+            "plate": "22461JY",
+            "state": "NY",
+            "license_type": "COM",
+            "summons_number": "1461301208",
+            "issue_date": "08/20/2019",
+            "violation_time": "11:04A",
+            "violation": "SAFETY ZONE",
+            "fine_amount": "115",
+            "penalty_amount": "10",
+            "interest_amount": "0",
+            "reduction_amount": "10",
+            "payment_amount": "115",
+            "amount_due": "0",
+            "precinct": "000",
+            "county": "NY",
+            "issuing_agency": "POLICE DEPARTMENT",
+            "summons_image": {
+                "url": "http://nycserv.nyc.gov/NYCServWeb/ShowImage?searchID=VFZSUk1rMVVUWGROVkVsM1QwRTlQUT09&locationName=_____________________",
+                "description": "View Summons"
+            }
+        },
+        {
+            "plate": "036TSD",
+            "state": "DP",
+            "license_type": "PAS",
+            "summons_number": "3284119012",
+            "issue_date": "09/17/2098",
+            "violation_time": "04:37P",
+            "violation": "NO STANDING-EXC. TRUCK LOADING",
+            "fine_amount": "55",
+            "penalty_amount": "60",
+            "interest_amount": "0",
+            "reduction_amount": "0",
+            "payment_amount": "0",
+            "amount_due": "115",
+            "precinct": "019",
+            "county": "NY",
+            "issuing_agency": "PARKING CONTROL UNIT",
+            "summons_image": {
+                "url": "http://nycserv.nyc.gov/NYCServWeb/ShowImage?searchID=VFhwSk5FNUVSWGhQVkVGNFRXYzlQUT09&locationName=_____________________",
+                "description": "View Summons"
+            }
+        }
+    ]
+}

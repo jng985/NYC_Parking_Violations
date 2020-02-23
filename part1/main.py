@@ -7,7 +7,7 @@ import numpy as np
 import argparse
 from functools import reduce
 
-from src.bigdata1.api import get_results, output_results
+from src.bigdata1.api import get_results, add_record
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -16,12 +16,9 @@ if __name__ == "__main__":
     parser.add_argument("--output", default=None)
     args = parser.parse_args()
 
-    response = get_results(args.page_size, args.num_pages)
+    get_results(args.page_size, args.num_pages, args.output)
     
-    if args.output:
-        output_results(response, args.output)
-    else:
-        pprint.pprint(response, indent=4)
+
 
 
     

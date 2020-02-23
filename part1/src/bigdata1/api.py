@@ -1,11 +1,9 @@
 import os
 import sys
-import requests
-import collections
 import json 
+import pprint
 from sodapy import Socrata
-import pandas as pd
-import numpy as np
+
 
 data_id = 'nc67-uf89'
 client = Socrata('data.cityofnewyork.us', os.environ.get("APP_KEY"))
@@ -19,7 +17,7 @@ def get_results(page_size, num_pages, output):
             if output:
                 add_record(record, output)
             else:
-                print(record)
+                pprint.pprint(record, indent=4)
 
 def add_record(record, output):
 

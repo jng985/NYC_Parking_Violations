@@ -1,11 +1,4 @@
-import os
-import sys
-import json
-import pprint
-import pandas as pd
-import numpy as np
 import argparse
-from functools import reduce
 
 from src.bigdata1.api import get_results, add_record
 

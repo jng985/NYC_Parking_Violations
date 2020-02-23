@@ -3,7 +3,6 @@ import json
 import pprint
 from sodapy import Socrata
 
-
 data_id = 'nc67-uf89'
 client = Socrata('data.cityofnewyork.us', os.environ.get("APP_KEY"))
 

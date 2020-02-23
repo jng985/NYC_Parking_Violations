@@ -75,44 +75,70 @@
 ### Python Scripts
 
 `main.py`
-  ```py
+ ```py
+  import argparse
+
+  from src.bigdata1.api import get_results, add_record
+
   if __name__ == "__main__":
       parser = argparse.ArgumentParser()
       parser.add_argument("--page_size", type=int)
-      parser.add_argument("--num_pages", default=4, type=int)
+      parser.add_argument("--num_pages", default=None, type=int)
       parser.add_argument("--output", default=None)
       args = parser.parse_args()
 
       get_results(args.page_size, args.num_pages, args.output)
-  ```
+ ```
 
 `src/bigdata1/api.py`
-  ```py
-  data_id = 'nc67-uf89'
-  client = Socrata('data.cityofnewyork.us', os.environ.get("APP_KEY"))
+```py
+import os
+import json 
+import pprint
+from sodapy import Socrata
 
-  def get_results(page_size, num_pages, output):
-      for page in range(num_pages):
-          offset = page * page_size
-          page_response = client.get(data_id, limit=page_size, offset=offset)
+data_id = 'nc67-uf89'
+client = Socrata('data.cityofnewyork.us', os.environ.get("APP_KEY"))
+count = int(client.get(data_id, select='COUNT(*)')[0]['COUNT'])
 
-          for record in page_response:
-              if output:
-                  add_record(record, output)
-              else:
-                  print(record)
+def get_results(page_size, num_pages, output):
+    if not num_pages:
+        num_pages = count // page_size + 1
 
-  def add_record(record, output):
+    if output:
+        create_records(output)
 
-      with open(output, 'r') as json_file: 
-          data = json.load(json_file) 
-          records = data['results'] 
-          records.append(record) 
+    for page in range(num_pages):
+        offset = page * page_size
+        page_records = client.get(data_id, limit=page_size, offset=offset)
 
-      with open(output, 'w') as json_file:
-          json.dump(results, f, indent=4)
+        for record in page_records:
+            if output:
+                add_record(record, output)
+            else:
+                pprint.pprint(record, indent=4)
 
-  ```
+def create_records(output):
+    with open(output, 'w') as json_file:
+        init = {'results': []}
+        json.dump(init, json_file, indent=4)
+
+
+def add_record(record, output):
+
+    with open(output) as json_file: 
+        data = json.load(json_file) 
+        records = data['results'] 
+        records.append(record) 
+    
+    with open(output, 'w') as json_file:
+        json.dump(data, json_file, indent=4)
+```
+
+
+
+
+
   
 ### Usage
 
@@ -136,117 +162,115 @@ $ docker run -v $(pwd):/app -e APP_KEY=$soda_token -it bigdata1:1.0 python -m ma
 ```
 ```console
 {   'amount_due': '0',
-    'county': 'BK',
-    'fine_amount': '50',
-    'interest_amount': '0',
-    'issue_date': '08/19/2019',
-    'issuing_agency': 'DEPARTMENT OF TRANSPORTATION',
-    'license_type': 'PAS',
-    'payment_amount': '75',
-    'penalty_amount': '25',
-    'plate': 'GYA1764',
-    'precinct': '000',
-    'reduction_amount': '0',
-    'state': 'NY',
-    'summons_image': {   'description': 'View Summons',
-                         'url': 'http://nycserv.nyc.gov/NYCServWeb/ShowImage?searchID=VGtSWk1rMTZXWGhQUkZWNVRXYzlQUT09&locationName=_____________________'},
-    'summons_number': '4663618522',
-    'violation': 'PHTO SCHOOL ZN SPEED VIOLATION',
-    'violation_time': '06:59P'}
-{   'amount_due': '0',
-    'county': 'QN',
-    'fine_amount': '50',
-    'interest_amount': '0',
-    'issue_date': '08/29/2019',
-    'issuing_agency': 'DEPARTMENT OF TRANSPORTATION',
-    'license_type': 'PAS',
-    'payment_amount': '50',
-    'penalty_amount': '25',
-    'plate': 'HFJ6860',
-    'precinct': '000',
-    'reduction_amount': '25',
-    'state': 'NY',
-    'summons_image': {   'description': 'View Summons',
-                         'url': 'http://nycserv.nyc.gov/NYCServWeb/ShowImage?searchID=VGtSWk1rNUVVVFZPVkUxNlRVRTlQUT09&locationName=_____________________'},
-    'summons_number': '4664495330',
-    'violation': 'PHTO SCHOOL ZN SPEED VIOLATION',
-    'violation_time': '07:28P'}
-{   'amount_due': '0',
-    'county': 'NY',
-    'fine_amount': '115',
-    'interest_amount': '5.33',
-    'issue_date': '04/17/2019',
-    'issuing_agency': 'TRAFFIC',
-    'judgment_entry_date': '08/01/2019',
-    'license_type': 'PAS',
-    'payment_amount': '180.2',
-    'penalty_amount': '60',
-    'plate': 'K54KBY',
-    'precinct': '033',
-    'reduction_amount': '0.13',
-    'state': 'NJ',
-    'summons_image': {   'description': 'View Summons',
-                         'url': 'http://nycserv.nyc.gov/NYCServWeb/ShowImage?searchID=VDBSWk5FNUVVVEJPYW1zeFRWRTlQUT09&locationName=_____________________'},
-    'summons_number': '8684446951',
-    'violation': 'NO STANDING-DAY/TIME LIMITS',
-    'violation_status': 'HEARING HELD-GUILTY',
-    'violation_time': '10:45A'}
-{   'amount_due': '0',
     'county': 'NY',
     'fine_amount': '115',
     'interest_amount': '0',
-    'issue_date': '07/09/2018',
+    'issue_date': '08/17/2018',
     'issuing_agency': 'TRAFFIC',
     'license_type': 'PAS',
     'payment_amount': '125',
-    'penalty_amount': '10',
-    'plate': '65AB2W',
-    'precinct': '017',
-    'reduction_amount': '0',
-    'state': 'MO',
+    'penalty_amount': '30',
+    'plate': 'JJFT37',
+    'precinct': '006',
+    'reduction_amount': '20',
+    'state': 'FL',
     'summons_image': {   'description': 'View Summons',
-                         'url': 'http://nycserv.nyc.gov/NYCServWeb/ShowImage?searchID=VDBSWk1FMUVXVE5OUkdjeFRuYzlQUT09&locationName=_____________________'},
-    'summons_number': '8640670857',
-    'violation': 'DOUBLE PARKING',
-    'violation_time': '08:31P'}
+                         'url': 'http://nycserv.nyc.gov/NYCServWeb/ShowImage?searchID=VDBSWmVrOUVUWHBPZW1zMVRWRTlQUT09&locationName=_____________________'},
+    'summons_number': '8638337991',
+    'violation': 'NO STANDING-DAY/TIME LIMITS',
+    'violation_time': '05:43P'}
 {   'amount_due': '0',
-    'county': 'NY',
-    'fine_amount': '65',
+    'county': 'K',
+    'fine_amount': '45',
     'interest_amount': '0',
-    'issue_date': '09/29/2019',
-    'issuing_agency': 'POLICE DEPARTMENT',
-    'license_type': 'PAS',
-    'payment_amount': '65',
+    'issue_date': '11/27/2018',
+    'issuing_agency': 'TRAFFIC',
+    'license_type': 'SRF',
+    'payment_amount': '45',
     'penalty_amount': '0',
-    'plate': 'HTK6425',
-    'precinct': '005',
+    'plate': 'ASX3866',
+    'precinct': '071',
     'reduction_amount': '0',
     'state': 'NY',
     'summons_image': {   'description': 'View Summons',
-                         'url': 'http://nycserv.nyc.gov/NYCServWeb/ShowImage?searchID=VFZSUk1VMVVaelJQUkd0NVRXYzlQUT09&locationName=_____________________'},
-    'summons_number': '1451888922',
-    'violation': 'NO PARKING-DAY/TIME LIMITS',
-    'violation_time': '05:05P'}
+                         'url': 'http://nycserv.nyc.gov/NYCServWeb/ShowImage?searchID=VDBSWmVFMTZXWHBOYWxGNFRsRTlQUT09&locationName=_____________________'},
+    'summons_number': '8613632415',
+    'violation': 'NO PARKING-STREET CLEANING',
+    'violation_status': 'HEARING HELD-GUILTY',
+    'violation_time': '12:17P'}
+{   'amount_due': '0',
+    'county': 'K',
+    'fine_amount': '45',
+    'interest_amount': '0',
+    'issue_date': '11/27/2018',
+    'issuing_agency': 'TRAFFIC',
+    'license_type': 'OMS',
+    'payment_amount': '45',
+    'penalty_amount': '0',
+    'plate': 'HTM7725',
+    'precinct': '071',
+    'reduction_amount': '0',
+    'state': 'NY',
+    'summons_image': {   'description': 'View Summons',
+                         'url': 'http://nycserv.nyc.gov/NYCServWeb/ShowImage?searchID=VDBSWmVFMTZXWHBOYWxGNlQxRTlQUT09&locationName=_____________________'},
+    'summons_number': '8613632439',
+    'violation': 'NO PARKING-STREET CLEANING',
+    'violation_time': '12:21P'}
 {   'amount_due': '0',
     'county': 'Q',
     'fine_amount': '65',
     'interest_amount': '0',
-    'issue_date': '09/28/2018',
+    'issue_date': '09/30/2017',
     'issuing_agency': 'TRAFFIC',
-    'license_type': 'COM',
-    'payment_amount': '28',
+    'license_type': 'PAS',
+    'payment_amount': '65',
     'penalty_amount': '0',
-    'plate': '83504MH',
+    'plate': 'HER6258',
     'precinct': '104',
-    'reduction_amount': '37',
+    'reduction_amount': '0',
     'state': 'NY',
     'summons_image': {   'description': 'View Summons',
-                         'url': 'http://nycserv.nyc.gov/NYCServWeb/ShowImage?searchID=VDBSWk1FMUVUVEJOVkdzeFRYYzlQUT09&locationName=_____________________'},
-    'summons_number': '8640341953',
-    'violation': 'STORAGE-3HR COMMERCIAL',
-    'violation_status': 'HEARING HELD-GUILTY REDUCTION',
-    'violation_time': '11:23P'}
-```
+                         'url': 'http://nycserv.nyc.gov/NYCServWeb/ShowImage?searchID=VDBSVk1rMVVVVEJOUkdkM1RtYzlQUT09&locationName=_____________________'},
+    'summons_number': '8561440806',
+    'violation': 'FRONT OR BACK PLATE MISSING',
+    'violation_time': '11:06A'}
+{   'amount_due': '0',
+    'county': 'QN',
+    'fine_amount': '50',
+    'interest_amount': '0',
+    'issue_date': '09/07/2017',
+    'issuing_agency': 'DEPARTMENT OF TRANSPORTATION',
+    'license_type': 'PAS',
+    'payment_amount': '50',
+    'penalty_amount': '0',
+    'plate': 'FGN9037',
+    'precinct': '000',
+    'reduction_amount': '0',
+    'state': 'NY',
+    'summons_image': {   'description': 'View Summons',
+                         'url': 'http://nycserv.nyc.gov/NYCServWeb/ShowImage?searchID=VGtSWmVrNXFZM2hOUkd0NFRsRTlQUT09&locationName=_____________________'},
+    'summons_number': '4636710915',
+    'violation': 'PHTO SCHOOL ZN SPEED VIOLATION',
+    'violation_time': '11:09A'}
+{   'amount_due': '0',
+    'county': 'Q',
+    'fine_amount': '65',
+    'interest_amount': '0',
+    'issue_date': '10/24/2016',
+    'issuing_agency': 'TRAFFIC',
+    'license_type': 'PAS',
+    'payment_amount': '65',
+    'penalty_amount': '0',
+    'plate': 'DWT1970',
+    'precinct': '109',
+    'reduction_amount': '0',
+    'state': 'NY',
+    'summons_image': {   'description': 'View Summons',
+                         'url': 'http://nycserv.nyc.gov/NYCServWeb/ShowImage?searchID=VG5wUk5VOVVhM3BOVkZrd1RVRTlQUT09&locationName=_____________________'},
+    'summons_number': '7499931640',
+    'violation': 'REG. STICKER-EXPIRED/MISSING',
+    'violation_time': '02:42P'}
+ ```
 
   
 

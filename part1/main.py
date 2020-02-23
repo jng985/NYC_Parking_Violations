@@ -5,7 +5,7 @@ from src.bigdata1.api import get_results, add_record
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--page_size", type=int)
-    parser.add_argument("--num_pages", default=4, type=int)
+    parser.add_argument("--num_pages", default=None, type=int)
     parser.add_argument("--output", default=None)
     args = parser.parse_args()
 

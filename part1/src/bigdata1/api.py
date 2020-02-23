@@ -1,5 +1,4 @@
 import os
-import sys
 import json 
 import pprint
 from sodapy import Socrata
@@ -18,6 +17,8 @@ def get_results(page_size, num_pages, output):
                 add_record(record, output)
             else:
                 pprint.pprint(record, indent=4)
+
+    print(len(set()))
 
 def add_record(record, output):
 

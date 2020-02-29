@@ -246,7 +246,6 @@ Note: When using docker **within** the EC2 instance, the `sudo` command **must**
 - Checking the number of records in `results.json`
 
   - if `page_size` and `num_pages` are given, `page_size` * `num_pages` should be printed to stdout
-
   
   ```console
   $ cat results.json | wc -l

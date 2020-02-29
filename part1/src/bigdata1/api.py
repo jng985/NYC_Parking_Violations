@@ -10,14 +10,11 @@ count = int(client.get(data_id, select='COUNT(*)')[0]['COUNT'])
 def get_results(page_size, num_pages, output):
     if not num_pages:
         num_pages = count // page_size + 1
-
     if output:
         create_records(output)
-
     for page in range(num_pages):
         offset = page * page_size
         page_records = client.get(data_id, limit=page_size, offset=offset)
-
         for record in page_records:
             if output:
                 add_record(record, output)
@@ -25,20 +22,12 @@ def get_results(page_size, num_pages, output):
                 pprint.pprint(record, indent=4)
 
 def create_records(output):
-    with open(output, 'w') as json_file:
-        init = {'results': []}
-        json.dump(init, json_file, indent=4)
-
+    with open(output, 'w') as out_file:
+        pass
 
 def add_record(record, output):
-
-    with open(output) as json_file: 
-        data = json.load(json_file) 
-        records = data['results'] 
-        records.append(record) 
-    
-    with open(output, 'w') as json_file:
-        json.dump(data, json_file, indent=4)
+    with open(output, 'a') as out_file: 
+        out_file.write(json.dumps(record) + '\n')
 
 
 

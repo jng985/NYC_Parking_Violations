@@ -3,7 +3,6 @@
 ## Part 1: Python Scripting	
 
 ### File Structure
-
   ```console
   $ tree
   ```
@@ -37,7 +36,8 @@
   
 ### Python Scripts
 
-`main.py`
+- `main.py`
+
 ```py
 import argparse
 
@@ -53,7 +53,8 @@ if __name__ == "__main__":
     get_results(args.page_size, args.num_pages, args.output)
  ```
 
-`src/bigdata1/api.py`
+- `src/bigdata1/api.py`
+
 ```py
 import os
 import json 
@@ -224,6 +225,7 @@ $ sudo docker run -e APP_KEY=${APP_KEY} -v ${PWD}:/app/out -it jng985/bigdata1:2
 ```
 
 - Checking the number of records in `results.json`
+
   - if `page_size` and `num_pages` are given, `page_size` * `num_pages` should be printed to stdout
 ```console
 $ cat results.json | wc -l

@@ -161,22 +161,22 @@ $ docker run -v $(pwd):/app -e APP_KEY=$soda_token -it bigdata1:2.0 python -m ma
 
 - Build docker image if necessary
 ```console
-docker build -t bigdata1:2.0 .
+$ docker build -t bigdata1:2.0 .
 ```
 
 - Get the `UUID` of the desired image
 ```console
-docker images | grep bigdata1
+$ docker images | grep bigdata1
 ```
 
 - Tag the image with dockerhub username **with** the version number
 ```console
-docker tag {*Insert UUID*} jng985/bigdata1:2.0
+$ docker tag {*Insert UUID*} jng985/bigdata1:2.0
 ```
 
 - Push docker image **without** the version number
 ```console
-docker push jng985/bigdata1
+$ docker push jng985/bigdata1
 ```
 
 ### EC2
@@ -188,13 +188,13 @@ docker push jng985/bigdata1
 - Change `.pem` file permissions to **read-only**
 
 ```console
-chmod 0400 {*Insert .pem File*}
+$ chmod 0400 {*Insert .pem File*}
 ```
 
 - ssh into the EC2 instance
 
 ```console
-ssh -i {*Insert .pem File*} ubuntu@{*Insert Public IP*}
+$ ssh -i {*Insert .pem File*} ubuntu@{*Insert Public IP*}
 ```
 
 #### Docker setup 
@@ -202,21 +202,21 @@ ssh -i {*Insert .pem File*} ubuntu@{*Insert Public IP*}
 - Update and install `docker.io`
 
 ```console
-sudo apt-get update
-sudo apt install docker.io
+$ sudo apt-get update
+$ sudo apt install docker.io
 ```
 
 - Log in and pull docker image
 
 ```console
-sudo docker login --username=jng985
-sudo docker pull jng985/bigdata1:2.0
+$ sudo docker login --username=jng985
+$ sudo docker pull jng985/bigdata1:2.0
 ```
 
 - Export environment variable `APP_KEY` if necessary
 
 ```console
-export APP_KEY={*Insert App Token*}
+$ export APP_KEY={*Insert App Token*}
 ```
 
 #### Run docker modules
@@ -232,14 +232,14 @@ export APP_KEY={*Insert App Token*}
     - `--output=./out/{*Insert Output Filename*}`
     
 ```console
-sudo docker run -e APP_KEY=${APP_KEY} -v ${PWD}:/app/out -it jng985/bigdata1:2.0 python -m main --page_size=3 --num_pages=2 --output=./out/results.json
+$ sudo docker run -e APP_KEY=${APP_KEY} -v ${PWD}:/app/out -it jng985/bigdata1:2.0 python -m main --page_size=3 --num_pages=2 --output=./out/results.json
 ```
 
 - Checking the number of records in `results.json`
   - if `page_size` and `num_pages` are given, `page_size` * `num_pages` should be printed to stdout
   
 ```console
-cat results.json | wc -l
+$ cat results.json | wc -l
 ```
 
 ## Part 2: Loading into ElasticSearch	

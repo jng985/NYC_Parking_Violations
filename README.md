@@ -176,7 +176,7 @@ chmod 0400 9760_ubuntu.pem
 ssh -i 9760_ubuntu.pem ubuntu@{*Insert Public IP*}
 ```
 
-### Docker setup 
+#### Docker setup 
 
 - Update and install `docker.io`
 

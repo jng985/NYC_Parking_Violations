@@ -199,6 +199,8 @@ $ ssh -i {*Insert .pem File*} ubuntu@{*Insert Public IP*}
 
 #### Docker setup 
 
+Note: When using docker **within** the EC2 instance, the `sudo` command **must** be run. It is possible to make it so that it isn't required, but this is the case "out of the box".
+
 - Update and install `docker.io`
 
 ```console

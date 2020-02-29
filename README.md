@@ -237,19 +237,160 @@ Note: When using docker **within** the EC2 instance, the `sudo` command **must**
     - `--num_pages={*Insert Num Pages*}`
     
     - `--output=./out/{*Insert Output Filename*}`
+  
+  - if `page_size` and `num_pages` are given, `page_size` * `num_pages` should be printed to stdout
     
+ 
+  ```console
+  $ sudo docker run -e APP_KEY=${APP_KEY} -v ${PWD}:/app/out -it jng985/bigdata1:2.0 python -m main --page_size=2 --num_pages=2
+  ```
+  
+  ```output
+  {   'amount_due': '197.96',
+      'county': 'BX',
+      'fine_amount': '60',
+      'interest_amount': '77.96',
+      'issue_date': '09/14/2012',
+      'issuing_agency': 'POLICE DEPARTMENT',
+      'judgment_entry_date': '01/03/2013',
+      'license_type': 'PAS',
+      'payment_amount': '0',
+      'penalty_amount': '60',
+      'plate': 'FHW8370',
+      'precinct': '040',
+      'reduction_amount': '0',
+      'state': 'NY',
+      'summons_image': {   'description': 'View Summons',
+                           'url': 'http://nycserv.nyc.gov/NYCServWeb/ShowImage?searchID=VFZSTk1FNUVZekpOVkdkNFRWRTlQUT09&locationName=_____________________'},
+      'summons_number': '1344761811',
+      'violation': 'NO PARKING-EXC. AUTH. VEHICLE',
+      'violation_time': '02:50P'}
+  {   'amount_due': '125',
+      'county': 'NY',
+      'fine_amount': '115',
+      'interest_amount': '0',
+      'issue_date': '01/15/2020',
+      'issuing_agency': 'POLICE DEPARTMENT',
+      'license_type': 'SRF',
+      'payment_amount': '0',
+      'penalty_amount': '10',
+      'plate': 'GR8ITUDE',
+      'precinct': '000',
+      'reduction_amount': '0',
+      'state': 'NY',
+      'summons_image': {   'description': 'View Summons',
+                           'url': 'http://nycserv.nyc.gov/NYCServWeb/ShowImage?searchID=VFZSUk1rNUVhM2hOZW1kNlRYYzlQUT09&locationName=_____________________'},
+      'summons_number': '1464913833',
+      'violation': 'NO STANDING-BUS LANE',
+      'violation_time': '06:17P'}
+  {   'amount_due': '75',
+      'county': 'NY',
+      'fine_amount': '65',
+      'interest_amount': '0',
+      'issue_date': '01/15/2020',
+      'issuing_agency': 'POLICE DEPARTMENT',
+      'license_type': 'PAS',
+      'payment_amount': '0',
+      'penalty_amount': '10',
+      'plate': '45E0534',
+      'precinct': '000',
+      'reduction_amount': '0',
+      'state': 'PA',
+      'summons_image': {   'description': 'View Summons',
+                           'url': 'http://nycserv.nyc.gov/NYCServWeb/ShowImage?searchID=VFZSUk1rNUVhM2hOZW1jeFRuYzlQUT09&locationName=_____________________'},
+      'summons_number': '1464913857',
+      'violation': 'FRONT OR BACK PLATE MISSING',
+      'violation_time': '06:30P'}
+  {   'amount_due': '125',
+      'county': 'NY',
+      'fine_amount': '115',
+      'interest_amount': '0',
+      'issue_date': '01/15/2020',
+      'issuing_agency': 'POLICE DEPARTMENT',
+      'license_type': 'PAS',
+      'payment_amount': '0',
+      'penalty_amount': '10',
+      'plate': '45E0534',
+      'precinct': '000',
+      'reduction_amount': '0',
+      'state': 'PA',
+      'summons_image': {   'description': 'View Summons',
+                           'url': 'http://nycserv.nyc.gov/NYCServWeb/ShowImage?searchID=VFZSUk1rNUVhM2hOZW1jeVQxRTlQUT09&locationName=_____________________'},
+      'summons_number': '1464913869',
+      'violation': 'NO STANDING-BUS LANE',
+      'violation_time': '06:30P'}
+  ```
+  
   
   ```console
-  $ sudo docker run -e APP_KEY=${APP_KEY} -v ${PWD}:/app/out -it jng985/bigdata1:2.0 python -m main --page_size=3 --num_pages=2 --output=./out/results.json
+  $ sudo docker run -e APP_KEY=${APP_KEY} -v ${PWD}:/app/out -it jng985/bigdata1:2.0 python -m main --page_size=2 --num_pages=2 --output=./out/results.json 
   ```
-
-- Checking the number of records in `results.json`
+  
+  - To see what the output file `results.json` looks like:
+  
+  ```console
+  $ cat results.json
+  ```
+  
+  ```output
+  {"plate": "FHW8370", "state": "NY", "license_type": "PAS", "summons_number": "1344761811", "issue_date": "09/14/2012", "violation_time": "02:50P", "violation": "NO PARKING-EXC. AUTH. VEHICLE", "judgment_entry_date": "01/03/2013", "fine_amount": "60", "penalty_amount": "60", "interest_amount": "77.96", "reduction_amount": "0", "payment_amount": "0", "amount_due": "197.96", "precinct": "040", "county": "BX", "issuing_agency": "POLICE DEPARTMENT", "summons_image": {"url": "http://nycserv.nyc.gov/NYCServWeb/ShowImage?searchID=VFZSTk1FNUVZekpOVkdkNFRWRTlQUT09&locationName=_____________________", "description": "View Summons"}}
+  {"plate": "GR8ITUDE", "state": "NY", "license_type": "SRF", "summons_number": "1464913833", "issue_date": "01/15/2020", "violation_time": "06:17P", "violation": "NO STANDING-BUS LANE", "fine_amount": "115", "penalty_amount": "10", "interest_amount": "0", "reduction_amount": "0", "payment_amount": "0", "amount_due": "125", "precinct": "000", "county": "NY", "issuing_agency": "POLICE DEPARTMENT", "summons_image": {"url": "http://nycserv.nyc.gov/NYCServWeb/ShowImage?searchID=VFZSUk1rNUVhM2hOZW1kNlRYYzlQUT09&locationName=_____________________", "description": "View Summons"}}
+  {"plate": "45E0534", "state": "PA", "license_type": "PAS", "summons_number": "1464913857", "issue_date": "01/15/2020", "violation_time": "06:30P", "violation": "FRONT OR BACK PLATE MISSING", "fine_amount": "65", "penalty_amount": "10", "interest_amount": "0", "reduction_amount": "0", "payment_amount": "0", "amount_due": "75", "precinct": "000", "county": "NY", "issuing_agency": "POLICE DEPARTMENT", "summons_image": {"url": "http://nycserv.nyc.gov/NYCServWeb/ShowImage?searchID=VFZSUk1rNUVhM2hOZW1jeFRuYzlQUT09&locationName=_____________________", "description": "View Summons"}}
+  {"plate": "45E0534", "state": "PA", "license_type": "PAS", "summons_number": "1464913869", "issue_date": "01/15/2020", "violation_time": "06:30P", "violation": "NO STANDING-BUS LANE", "fine_amount": "115", "penalty_amount": "10", "interest_amount": "0", "reduction_amount": "0", "payment_amount": "0", "amount_due": "125", "precinct": "000", "county": "NY", "issuing_agency": "POLICE DEPARTMENT", "summons_image": {"url": "http://nycserv.nyc.gov/NYCServWeb/ShowImage?searchID=VFZSUk1rNUVhM2hOZW1jeVQxRTlQUT09&locationName=_____________________", "description": "View Summons"}}
+  ```
+  
+  
+  ```console
+  $ sudo docker run -e APP_KEY=${APP_KEY} -v ${PWD}:/app/out -it jng985/bigdata1:2.0 python -m main --page_size=10 --num_pages=100 --output=./out/results.json 
+  ```
+  
+  To print the number of records:
   
   ```console
   $ cat results.json | wc -l
   ```
   
-  - if `page_size` and `num_pages` are given, `page_size` * `num_pages` should be printed to stdout
+  ```output
+  1000
+  ```
+  
+  
+  ```console
+  $ sudo docker run -e APP_KEY=${APP_KEY} -v ${PWD}:/app/out -it jng985/bigdata1:2.0 python -m main --page_size=8 --num_pages=1 --output=./out/results.json && cat results.json | wc -l && cat results.json
+  ```
+  
+  ```output
+  8
+  {"plate": "CJLS22", "state": "FL", "license_type": "PAS", "summons_number": "1419826750", "issue_date": "01/19/2017", "violation_time": "11:38A", "violation": "NO PARKING-STREET CLEANING", "judgment_entry_date": "05/11/2017", "fine_amount": "45", "penalty_amount": "60", "interest_amount": "25.97", "reduction_amount": "0", "payment_amount": "0", "amount_due": "130.97", "precinct": "026", "county": "NY", "issuing_agency": "POLICE DEPARTMENT", "summons_image": {"url": "http://nycserv.nyc.gov/NYCServWeb/ShowImage?searchID=VFZSUmVFOVVaM2xPYW1NeFRVRTlQUT09&locationName=_____________________", "description": "View Summons"}}
+  {"plate": "CVW7557", "state": "NY", "license_type": "PAS", "summons_number": "8006734926", "issue_date": "11/11/2014", "violation_time": "12:40P", "violation": "EXPIRED MUNI METER", "judgment_entry_date": "02/26/2015", "fine_amount": "35", "penalty_amount": "60", "interest_amount": "41.51", "reduction_amount": "0", "payment_amount": "0", "amount_due": "136.51", "precinct": "104", "county": "Q", "issuing_agency": "TRAFFIC", "summons_image": {"url": "http://nycserv.nyc.gov/NYCServWeb/ShowImage?searchID=VDBSQmQwNXFZM3BPUkd0NVRtYzlQUT09&locationName=_____________________", "description": "View Summons"}}
+  {"plate": "GFL1292", "state": "NY", "license_type": "PAS", "summons_number": "8006735098", "issue_date": "11/11/2014", "violation_time": "02:55P", "violation": "EXPIRED MUNI METER", "judgment_entry_date": "02/26/2015", "fine_amount": "35", "penalty_amount": "60", "interest_amount": "41.49", "reduction_amount": "0", "payment_amount": "0", "amount_due": "136.49", "precinct": "104", "county": "Q", "issuing_agency": "TRAFFIC", "summons_image": {"url": "http://nycserv.nyc.gov/NYCServWeb/ShowImage?searchID=VDBSQmQwNXFZM3BPVkVFMVQwRTlQUT09&locationName=_____________________", "description": "View Summons"}}
+  {"plate": "EHT6039", "state": "NY", "license_type": "PAS", "summons_number": "8006736212", "issue_date": "11/18/2014", "violation_time": "01:24P", "violation": "NO STANDING-TAXI STAND", "judgment_entry_date": "03/05/2015", "fine_amount": "115", "penalty_amount": "60", "interest_amount": "77.49", "reduction_amount": "0", "payment_amount": "0", "amount_due": "252.49", "precinct": "114", "county": "Q", "issuing_agency": "TRAFFIC", "summons_image": {"url": "http://nycserv.nyc.gov/NYCServWeb/ShowImage?searchID=VDBSQmQwNXFZM3BPYWtsNFRXYzlQUT09&locationName=_____________________", "description": "View Summons"}}
+  {"plate": "BEL1496", "state": "NC", "license_type": "PAS", "summons_number": "8006736522", "issue_date": "11/21/2014", "violation_time": "10:25A", "violation": "FAIL TO DSPLY MUNI METER RECPT", "judgment_entry_date": "03/12/2015", "fine_amount": "35", "penalty_amount": "60", "interest_amount": "41.17", "reduction_amount": "0", "payment_amount": "0", "amount_due": "136.17", "precinct": "112", "county": "Q", "issuing_agency": "TRAFFIC", "summons_image": {"url": "http://nycserv.nyc.gov/NYCServWeb/ShowImage?searchID=VDBSQmQwNXFZM3BPYWxWNVRXYzlQUT09&locationName=_____________________", "description": "View Summons"}}
+  {"plate": "GTP6411", "state": "NY", "license_type": "PAS", "summons_number": "8006737216", "issue_date": "11/25/2014", "violation_time": "10:07A", "violation": "NO PARKING-STREET CLEANING", "judgment_entry_date": "03/12/2015", "fine_amount": "45", "penalty_amount": "60", "interest_amount": "46.31", "reduction_amount": "0", "payment_amount": "0", "amount_due": "151.31", "precinct": "110", "county": "Q", "issuing_agency": "TRAFFIC", "summons_image": {"url": "http://nycserv.nyc.gov/NYCServWeb/ShowImage?searchID=VDBSQmQwNXFZM3BPZWtsNFRtYzlQUT09&locationName=_____________________", "description": "View Summons"}}
+  {"plate": "GNR6165", "state": "NY", "license_type": "OMS", "summons_number": "8006737575", "issue_date": "11/28/2014", "violation_time": "11:42A", "violation": "NO PARKING-STREET CLEANING", "judgment_entry_date": "03/19/2015", "fine_amount": "45", "penalty_amount": "60", "interest_amount": "46.13", "reduction_amount": "0", "payment_amount": "0", "amount_due": "151.13", "precinct": "114", "county": "Q", "issuing_agency": "TRAFFIC", "summons_image": {"url": "http://nycserv.nyc.gov/NYCServWeb/ShowImage?searchID=VDBSQmQwNXFZM3BPZWxVelRsRTlQUT09&locationName=_____________________", "description": "View Summons"}}
+  {"plate": "GBN2149", "state": "OH", "license_type": "PAS", "summons_number": "8006737782", "issue_date": "11/29/2014", "violation_time": "07:38A", "violation": "FAIL TO DSPLY MUNI METER RECPT", "judgment_entry_date": "03/19/2015", "fine_amount": "35", "penalty_amount": "60", "interest_amount": "41.01", "reduction_amount": "0", "payment_amount": "0", "amount_due": "136.01", "precinct": "109", "county": "Q", "issuing_agency": "TRAFFIC", "summons_image": {"url": "http://nycserv.nyc.gov/NYCServWeb/ShowImage?searchID=VDBSQmQwNXFZM3BPZW1NMFRXYzlQUT09&locationName=_____________________", "description": "View Summons"}}
+```
+  
+  ```console
+  $ sudo docker run -e APP_KEY=${APP_KEY} -v ${PWD}:/app/out -it jng985/bigdata1:2.0 python -m main --page_size=1 --num_pages=8 --output=./out/results.json && cat results.json | wc -l && cat results.json
+  ```
+  
+  ```output
+  8
+  {"plate": "HYZ1824", "state": "NY", "license_type": "PAS", "summons_number": "8663055225", "issue_date": "07/07/2018", "violation_time": "09:07A", "violation": "FAIL TO DSPLY MUNI METER RECPT", "fine_amount": "35", "penalty_amount": "10", "interest_amount": "0", "reduction_amount": "0", "payment_amount": "45", "amount_due": "0", "precinct": "068", "county": "K", "issuing_agency": "TRAFFIC", "summons_image": {"url": "http://nycserv.nyc.gov/NYCServWeb/ShowImage?searchID=VDBSWk1rMTZRVEZPVkVsNVRsRTlQUT09&locationName=_____________________", "description": "View Summons"}}
+  {"plate": "T754690C", "state": "NY", "license_type": "OMT", "summons_number": "8602839765", "issue_date": "02/08/2018", "violation_time": "11:08A", "violation": "NO PARKING-STREET CLEANING", "fine_amount": "45", "penalty_amount": "0", "interest_amount": "0", "reduction_amount": "45", "payment_amount": "0", "amount_due": "0", "precinct": "109", "county": "Q", "issuing_agency": "TRAFFIC", "violation_status": "HEARING HELD-NOT GUILTY", "summons_image": {"url": "http://nycserv.nyc.gov/NYCServWeb/ShowImage?searchID=VDBSWmQwMXFaM3BQVkdNeVRsRTlQUT09&locationName=_____________________", "description": "View Summons"}}
+  {"plate": "45E0534", "state": "PA", "license_type": "PAS", "summons_number": "1464913857", "issue_date": "01/15/2020", "violation_time": "06:30P", "violation": "FRONT OR BACK PLATE MISSING", "fine_amount": "65", "penalty_amount": "10", "interest_amount": "0", "reduction_amount": "0", "payment_amount": "0", "amount_due": "75", "precinct": "000", "county": "NY", "issuing_agency": "POLICE DEPARTMENT", "summons_image": {"url": "http://nycserv.nyc.gov/NYCServWeb/ShowImage?searchID=VFZSUk1rNUVhM2hOZW1jeFRuYzlQUT09&locationName=_____________________", "description": "View Summons"}}
+  {"plate": "GWW2528", "state": "PA", "license_type": "PAS", "summons_number": "7404230949", "issue_date": "01/15/2010", "summons_image": {"url": "http://nycserv.nyc.gov/NYCServWeb/ShowImage?searchID=VG5wUmQwNUVTWHBOUkdzd1QxRTlQUT09&locationName=_____________________", "description": "View Summons"}}
+  {"plate": "V79LBJ", "state": "NJ", "license_type": "PAS", "summons_number": "5106018456", "issue_date": "04/08/2019", "violation_time": "01:32P", "violation": "FAILURE TO STOP AT RED LIGHT", "judgment_entry_date": "07/11/2019", "fine_amount": "50", "penalty_amount": "25", "interest_amount": "4.07", "reduction_amount": "0", "payment_amount": "0", "amount_due": "79.07", "precinct": "000", "county": "BX", "issuing_agency": "DEPARTMENT OF TRANSPORTATION", "summons_image": {"url": "http://nycserv.nyc.gov/NYCServWeb/ShowImage?searchID=VGxSRmQwNXFRWGhQUkZFeFRtYzlQUT09&locationName=_____________________", "description": "View Summons"}}
+  {"plate": "HUG6116", "state": "NY", "license_type": "PAS", "summons_number": "1433962950", "issue_date": "08/11/2018", "violation_time": "04:44A", "violation": "DOUBLE PARKING", "judgment_entry_date": "11/29/2018", "fine_amount": "115", "penalty_amount": "60", "interest_amount": "3.61", "reduction_amount": "0.22", "payment_amount": "178.39", "amount_due": "0", "precinct": "081", "county": "K", "issuing_agency": "POLICE DEPARTMENT", "summons_image": {"url": "http://nycserv.nyc.gov/NYCServWeb/ShowImage?searchID=VFZSUmVrMTZhekpOYW1zeFRVRTlQUT09&locationName=_____________________", "description": "View Summons"}}
+  {"plate": "Y21HKL", "state": "NJ", "license_type": "PAS", "summons_number": "4641946670", "issue_date": "01/16/2018", "violation_time": "02:02P", "violation": "PHTO SCHOOL ZN SPEED VIOLATION", "judgment_entry_date": "04/12/2018", "fine_amount": "50", "penalty_amount": "25", "interest_amount": "0.01", "reduction_amount": "0", "payment_amount": "75.01", "amount_due": "0", "precinct": "000", "county": "BX", "issuing_agency": "DEPARTMENT OF TRANSPORTATION", "summons_image": {"url": "http://nycserv.nyc.gov/NYCServWeb/ShowImage?searchID=VGtSWk1FMVVhekJPYWxrelRVRTlQUT09&locationName=_____________________", "description": "View Summons"}}
+  {"plate": "GWR4023", "state": "NY", "license_type": "PAS", "summons_number": "8706513694", "issue_date": "01/23/2019", "violation_time": "09:24A", "violation": "REG. STICKER-EXPIRED/MISSING", "judgment_entry_date": "06/13/2019", "fine_amount": "65", "penalty_amount": "60", "interest_amount": "7.75", "reduction_amount": "0", "payment_amount": "0", "amount_due": "132.75", "precinct": "122", "county": "R", "issuing_agency": "TRAFFIC", "violation_status": "HEARING HELD-GUILTY", "summons_image": {"url": "http://nycserv.nyc.gov/NYCServWeb/ShowImage?searchID=VDBSamQwNXFWWGhOZWxrMVRrRTlQUT09&locationName=_____________________", "description": "View Summons"}}
+  ```
+  
+  
+  
+
+
 
 ## Part 2: Loading into ElasticSearch	
 

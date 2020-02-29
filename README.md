@@ -227,16 +227,16 @@ Note: When using docker **within** the EC2 instance, the `sudo` command **must**
     - `--num_pages={*Insert Num Pages*}`
     - `--output=./out/{*Insert Output Filename*}`
     
-```console
-$ sudo docker run -e APP_KEY=${APP_KEY} -v ${PWD}:/app/out -it jng985/bigdata1:2.0 python -m main --page_size=3 --num_pages=2 --output=./out/results.json
-```
+  ```console
+  $ sudo docker run -e APP_KEY=${APP_KEY} -v ${PWD}:/app/out -it jng985/bigdata1:2.0 python -m main --page_size=3 --num_pages=2 --output=./out/results.json
+  ```
 
 - Checking the number of records in `results.json`
 
   - if `page_size` and `num_pages` are given, `page_size` * `num_pages` should be printed to stdout
-```console
-$ cat results.json | wc -l
-```
+  ```console
+  $ cat results.json | wc -l
+  ```
 
 ## Part 2: Loading into ElasticSearch	
 

@@ -164,8 +164,52 @@ $ docker run -v $(pwd):/app -e APP_KEY=$soda_token -it bigdata1:1.0 python -m ma
 
 - Change directory to the folder containing `.pem` file
 
+- Change `.pem` file permissions to read-only
+
+```console
+chmod 0400 9760_ubuntu.pem
+```
+
+- ssh into the EC2 instance
+
 ```console
 ssh -i 9760_ubuntu.pem ubuntu@{*Insert Public IP*}
+```
+
+### Docker setup 
+
+- Update and install `docker.io`
+
+```console
+sudo apt-get update
+sudo apt install docker.io
+```
+
+- Log in and pull docker image
+
+```console
+sudo docker login --username=jng985
+sudo docker pull jng985/bigdata1:2.0
+```
+
+- Export environment variable `APP_KEY` if necessary
+
+```console
+export APP_KEY={*Insert App Token*}
+```
+
+- Run docker modules
+
+  - `-e APP_KEY=${APP_KEY}`
+  - `-v ${PWD}:/app/out`
+  - `-it jng985/bigdata1:2.0`
+  - `python -m main` 
+    - `--page_size=3` 
+    - `--num_pages=2`
+    - `--output=./out/results.json`
+    
+```console
+sudo docker run -e APP_KEY=${APP_KEY} -v ${PWD}:/app/out -it jng985/bigdata1:2.0 python -m main --page_size=3 --num_pages=2 --output=./out/results.json
 ```
 
 ## Part 2: Loading into ElasticSearch	

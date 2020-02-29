@@ -115,16 +115,6 @@ def add_record(record, output):
     - `-v $(pwd):/app`
     - `-e APP_KEY={*Insert Token Here*}`
     - `-it bigdata1:2.0 /bin/bash`
-    
-    
-  ```console
-  $ docker run -v $(pwd):/app -e APP_KEY=$soda_token -it bigdata1:2.0 /bin/bash
-  ```
-  ```console
-  $ docker run -v $(pwd):/app -e APP_KEY=$soda_token -it bigdata1:2.0 python -m main
-  ```
-      
-  - `$soda_token` = environment variable set in `.bash_profile`
   
 ### Usage
 
@@ -141,11 +131,28 @@ def add_record(record, output):
   - *Optional*
   - If not provided, print results to stdout. 
   - If provided, write the data to the file `output`.
+  
+#### Examples
 
+- `$soda_token` = environment variable set in `.bash_profile`
 
-```console
-$ docker run -v $(pwd):/app -e APP_KEY=$soda_token -it bigdata1:2.0 python -m main --page_size=3 --num_pages=2 
-```
+- Interactive terminal inside container
+
+  ```console
+  $ docker run -v $(pwd):/app -e APP_KEY=$soda_token -it bigdata1:2.0 /bin/bash
+  ```
+
+- Print 2 pages of 3 records per page (6 records)
+
+  ```console
+  $ docker run -v $(pwd):/app -e APP_KEY=$soda_token -it bigdata1:2.0 python -m main --page_size=3 --num_pages=2 
+  ```
+
+- Save 2 pages of 3 records per page (6 records) to `results.json`
+
+  ```console
+  $ docker run -v $(pwd):/app -e APP_KEY=$soda_token -it bigdata1:2.0 python -m main --page_size=3 --num_pages=2 --output=results.json
+  ```
 
 ### Deploy to Dockerhub
 

@@ -121,13 +121,18 @@ def add_record(record, output):
 #### Arguments
 
 - `--page_size`: 
+
   - **Required**
   - How many records to request from the API per call.
+  
 - `--num_pages`: 
+
   - *Optional*
   - If not provided, continue requesting data until the entirety of the content has been exhausted. 
   - If provided, continue querying for data `num_pages` times.
+  
 - `--output`: 
+
   - *Optional*
   - If not provided, print results to stdout. 
   - If provided, write the data to the file `output`.
@@ -240,10 +245,9 @@ Note: When using docker **within** the EC2 instance, the `sudo` command **must**
 
 - Checking the number of records in `results.json`
 
-
   - if `page_size` and `num_pages` are given, `page_size` * `num_pages` should be printed to stdout
   
-  
+  &nbsp;
   ```console
   $ cat results.json | wc -l
   ```

@@ -148,24 +148,24 @@ $ docker run -v $(pwd):/app -e APP_KEY=$soda_token -it bigdata1:2.0 python -m ma
 ### Deploy to Dockerhub
 
 - Build docker image if necessary
-```console
-$ docker build -t bigdata1:2.0 .
-```
+  ```console
+  $ docker build -t bigdata1:2.0 .
+  ```
 
 - Get the `UUID` of the desired image
-```console
-$ docker images | grep bigdata1
-```
+  ```console
+  $ docker images | grep bigdata1
+  ```
 
 - Tag the image with dockerhub username **with** the version number
-```console
-$ docker tag {*Insert UUID*} jng985/bigdata1:2.0
-```
+  ```console
+  $ docker tag {*Insert UUID*} jng985/bigdata1:2.0
+  ```
 
 - Push docker image **without** the version number
-```console
-$ docker push jng985/bigdata1
-```
+  ```console
+  $ docker push jng985/bigdata1
+  ```
 
 ### EC2
 
@@ -174,44 +174,40 @@ $ docker push jng985/bigdata1
 - Change directory to the folder containing `.pem` file
 
 - Change `.pem` file permissions to **read-only**
-
-```console
-$ chmod 0400 {*Insert .pem File*}
-```
+  ```console
+  $ chmod 0400 {*Insert .pem File*}
+  ```
 
 - ssh into the EC2 instance
-
-```console
-$ ssh -i {*Insert .pem File*} ubuntu@{*Insert Public IP*}
-```
+  ```console
+  $ ssh -i {*Insert .pem File*} ubuntu@{*Insert Public IP*}
+  ```
 
 #### Docker setup 
 
 Note: When using docker **within** the EC2 instance, the `sudo` command **must** be run. It is possible to make it so that it isn't required, but this is the case "out of the box".
 
 - Update and install `docker.io`
-
-```console
-$ sudo apt-get update
-$ sudo apt install docker.io
-```
+  ```console
+  $ sudo apt-get update
+  $ sudo apt install docker.io
+  ```
 
 - Log in and pull docker image
-
-```console
-$ sudo docker login --username=jng985
-$ sudo docker pull jng985/bigdata1:2.0
-```
+  ```console
+  $ sudo docker login --username=jng985
+  $ sudo docker pull jng985/bigdata1:2.0
+  ```
 
 - Export environment variable `APP_KEY` if necessary
-
-```console
-$ export APP_KEY={*Insert App Token*}
-```
+  ```console
+  $ export APP_KEY={*Insert App Token*}
+  ```
 
 #### Run docker modules
 
 - `sudo docker run`
+
   - `-e APP_KEY=${APP_KEY}`
   - `-v ${PWD}:/app/out`
     - This loads the current working directory into the `out` directory within the docker container
@@ -227,10 +223,9 @@ $ sudo docker run -e APP_KEY=${APP_KEY} -v ${PWD}:/app/out -it jng985/bigdata1:2
 
 - Checking the number of records in `results.json`
   - if `page_size` and `num_pages` are given, `page_size` * `num_pages` should be printed to stdout
-  
-```console
-$ cat results.json | wc -l
-```
+    ```console
+    $ cat results.json | wc -l
+    ```
 
 ## Part 2: Loading into ElasticSearch	
 

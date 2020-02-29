@@ -224,9 +224,9 @@ $ sudo docker run -e APP_KEY=${APP_KEY} -v ${PWD}:/app/out -it jng985/bigdata1:2
 
 - Checking the number of records in `results.json`
   - if `page_size` and `num_pages` are given, `page_size` * `num_pages` should be printed to stdout
-  ```console
-  $ cat results.json | wc -l
-  ```
+```console
+$ cat results.json | wc -l
+```
 
 ## Part 2: Loading into ElasticSearch	
 

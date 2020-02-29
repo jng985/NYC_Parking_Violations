@@ -33,44 +33,6 @@
   - `scipy`
   - `sodapy`
   - `pprint`
-
-### Docker
-
-  - `Dockerfile`
-
-  ```
-  FROM python:3.7
-
-  WORKDIR /app
-
-  COPY . .
-
-  RUN pip install -r requirements.txt
-  ```
-
-  - `docker build`
-  
-    - `-t bigdata1:2.0`
-    
-      ```console
-      $ docker build -t bigdata1:2.0 .
-      ```
-
-  - `docker run`
-  
-    - `-v $(pwd):/app`
-    - `-e APP_KEY={*Insert Token Here*}`
-    - `-it bigdata1:2.0 /bin/bash`
-    
-    
-      ```console
-      $ docker run -v $(pwd):/app -e APP_KEY=$soda_token -it bigdata1:2.0 /bin/bash
-      ```
-      ```console
-      $ docker run -v $(pwd):/app -e APP_KEY=$soda_token -it bigdata1:2.0 python -m main
-      ```
-      
-    - `$soda_token` = environment variable set in `.bash_profile`
   
 ### Python Scripts
 
@@ -124,6 +86,43 @@ def add_record(record, output):
         out_file.write(json.dumps(record) + '\n')
 ```
 
+### Docker
+
+  - `Dockerfile`
+
+  ```
+  FROM python:3.7
+
+  WORKDIR /app
+
+  COPY . .
+
+  RUN pip install -r requirements.txt
+  ```
+
+  - `docker build`
+  
+    - `-t bigdata1:2.0`
+    
+      ```console
+      $ docker build -t bigdata1:2.0 .
+      ```
+
+  - `docker run`
+  
+    - `-v $(pwd):/app`
+    - `-e APP_KEY={*Insert Token Here*}`
+    - `-it bigdata1:2.0 /bin/bash`
+    
+    
+      ```console
+      $ docker run -v $(pwd):/app -e APP_KEY=$soda_token -it bigdata1:2.0 /bin/bash
+      ```
+      ```console
+      $ docker run -v $(pwd):/app -e APP_KEY=$soda_token -it bigdata1:2.0 python -m main
+      ```
+      
+    - `$soda_token` = environment variable set in `.bash_profile`
   
 ### Usage
 

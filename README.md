@@ -43,31 +43,31 @@
 
   WORKDIR /app
 
-  COPY requirements.txt /app
+  COPY . .
 
   RUN pip install -r requirements.txt
   ```
 
   - `docker build`
   
-    - `-t bigdata1:1.0`
+    - `-t bigdata1:2.0`
     
       ```console
-      $ docker build -t bigdata1:1.0 .
+      $ docker build -t bigdata1:2.0 .
       ```
 
   - `docker run`
   
     - `-v $(pwd):/app`
     - `-e APP_KEY={*Insert Token Here*}`
-    - `-it bigdata1:1.0 /bin/bash`
+    - `-it bigdata1:2.0 /bin/bash`
     
     
       ```console
-      $ docker run -v $(pwd):/app -e APP_KEY=$soda_token -it bigdata1:1.0 /bin/bash
+      $ docker run -v $(pwd):/app -e APP_KEY=$soda_token -it bigdata1:2.0 /bin/bash
       ```
       ```console
-      $ docker run -v $(pwd):/app -e APP_KEY=$soda_token -it bigdata1:1.0 python -m main
+      $ docker run -v $(pwd):/app -e APP_KEY=$soda_token -it bigdata1:2.0 python -m main
       ```
       
     - `$soda_token` = environment variable set in `.bash_profile`
@@ -154,7 +154,7 @@ def add_record(record, output):
 
 
 ```console
-$ docker run -v $(pwd):/app -e APP_KEY=$soda_token -it bigdata1:1.0 python -m main --page_size=3 --num_pages=2 
+$ docker run -v $(pwd):/app -e APP_KEY=$soda_token -it bigdata1:2.0 python -m main --page_size=3 --num_pages=2 
 ```
 
 

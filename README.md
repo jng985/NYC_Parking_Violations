@@ -141,14 +141,14 @@ def add_record(record, output):
 #### Arguments
 
 - `--page_size`: 
-  - Required 
+  - **Required**
   - How many records to request from the API per call.
 - `--num_pages`: 
-  - Optional
+  - *Optional*
   - If not provided, continue requesting data until the entirety of the content has been exhausted. 
   - If provided, continue querying for data `num_pages` times.
 - `--output`: 
-  - Optional 
+  - *Optional*
   - If not provided, print results to stdout. 
   - If provided, write the data to the file `output`.
 
@@ -157,6 +157,27 @@ def add_record(record, output):
 $ docker run -v $(pwd):/app -e APP_KEY=$soda_token -it bigdata1:2.0 python -m main --page_size=3 --num_pages=2 
 ```
 
+### Deploy to Dockerhub
+
+- Build docker image if necessary
+```console
+docker build -t bigdata1:2.0 .
+```
+
+- Get the `UUID` of the desired image
+```console
+docker images | grep bigdata1
+```
+
+- Tag the image with dockerhub username **with** the version number
+```console
+docker tag {*Insert UUID*} jng985/bigdata1:2.0
+```
+
+- Push docker image **without** the version number
+```console
+docker push jng985/bigdata1
+```
 
 ### EC2
 
@@ -164,16 +185,16 @@ $ docker run -v $(pwd):/app -e APP_KEY=$soda_token -it bigdata1:2.0 python -m ma
 
 - Change directory to the folder containing `.pem` file
 
-- Change `.pem` file permissions to read-only
+- Change `.pem` file permissions to **read-only**
 
 ```console
-chmod 0400 9760_ubuntu.pem
+chmod 0400 {*Insert .pem File*}
 ```
 
 - ssh into the EC2 instance
 
 ```console
-ssh -i 9760_ubuntu.pem ubuntu@{*Insert Public IP*}
+ssh -i {*Insert .pem File*} ubuntu@{*Insert Public IP*}
 ```
 
 #### Docker setup 
@@ -215,7 +236,7 @@ sudo docker run -e APP_KEY=${APP_KEY} -v ${PWD}:/app/out -it jng985/bigdata1:2.0
 ```
 
 - Checking the number of records in `results.json`
-  - if `page_size` and `num_pages` are given, `page_size` * `num_pages` should be printed
+  - if `page_size` and `num_pages` are given, `page_size` * `num_pages` should be printed to stdout
   
 ```console
 cat results.json | wc -l

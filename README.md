@@ -203,6 +203,7 @@ export APP_KEY={*Insert App Token*}
 - `sudo docker run`
   - `-e APP_KEY=${APP_KEY}`
   - `-v ${PWD}:/app/out`
+    - This loads the current working directory into the `out` directory within the docker container
   - `-it jng985/bigdata1:2.0`
   - `python -m main` 
     - `--page_size={*Insert Page Size*}` 

@@ -137,7 +137,7 @@ def add_record(record, output):
   - If not provided, print results to stdout. 
   - If provided, write the data to the file `output`.
   
-#### Examples
+#### Example Commands
 
 - `$soda_token` = environment variable set in `.bash_profile`
 
@@ -240,6 +240,12 @@ Note: When using docker **within** the EC2 instance, the `sudo` command **must**
   
   - if `page_size` and `num_pages` are given, `page_size` * `num_pages` should be printed to stdout
     
+#### EC2 Examples
+ 
+ ---
+ 
+  - `page_size=2`
+  - `num_pages=2`
  
   ```console
   $ sudo docker run -e APP_KEY=${APP_KEY} -v ${PWD}:/app/out -it jng985/bigdata1:2.0 python -m main --page_size=2 --num_pages=2
@@ -326,7 +332,7 @@ Note: When using docker **within** the EC2 instance, the `sudo` command **must**
   $ sudo docker run -e APP_KEY=${APP_KEY} -v ${PWD}:/app/out -it jng985/bigdata1:2.0 python -m main --page_size=2 --num_pages=2 --output=./out/results.json 
   ```
   
-  - To see what the output file `results.json` looks like:
+  **To see what the output file `results.json` looks like:**
   
   ```console
   $ cat results.json
@@ -339,12 +345,17 @@ Note: When using docker **within** the EC2 instance, the `sudo` command **must**
   {"plate": "45E0534", "state": "PA", "license_type": "PAS", "summons_number": "1464913869", "issue_date": "01/15/2020", "violation_time": "06:30P", "violation": "NO STANDING-BUS LANE", "fine_amount": "115", "penalty_amount": "10", "interest_amount": "0", "reduction_amount": "0", "payment_amount": "0", "amount_due": "125", "precinct": "000", "county": "NY", "issuing_agency": "POLICE DEPARTMENT", "summons_image": {"url": "http://nycserv.nyc.gov/NYCServWeb/ShowImage?searchID=VFZSUk1rNUVhM2hOZW1jeVQxRTlQUT09&locationName=_____________________", "description": "View Summons"}}
   ```
   
+  ---
+  
+  - `page_size=10`
+  - `num_pages=100`
+  - `output=./out/results.json`
   
   ```console
   $ sudo docker run -e APP_KEY=${APP_KEY} -v ${PWD}:/app/out -it jng985/bigdata1:2.0 python -m main --page_size=10 --num_pages=100 --output=./out/results.json 
   ```
   
-  To print the number of records:
+  **To print the number of records:**
   
   ```console
   $ cat results.json | wc -l
@@ -354,6 +365,11 @@ Note: When using docker **within** the EC2 instance, the `sudo` command **must**
   1000
   ```
   
+  ---
+  
+  - `page_size=8`
+  - `num_pages=1`
+  - `output=./out/results.json`
   
   ```console
   $ sudo docker run -e APP_KEY=${APP_KEY} -v ${PWD}:/app/out -it jng985/bigdata1:2.0 python -m main --page_size=8 --num_pages=1 --output=./out/results.json && cat results.json | wc -l && cat results.json
@@ -369,7 +385,13 @@ Note: When using docker **within** the EC2 instance, the `sudo` command **must**
   {"plate": "GTP6411", "state": "NY", "license_type": "PAS", "summons_number": "8006737216", "issue_date": "11/25/2014", "violation_time": "10:07A", "violation": "NO PARKING-STREET CLEANING", "judgment_entry_date": "03/12/2015", "fine_amount": "45", "penalty_amount": "60", "interest_amount": "46.31", "reduction_amount": "0", "payment_amount": "0", "amount_due": "151.31", "precinct": "110", "county": "Q", "issuing_agency": "TRAFFIC", "summons_image": {"url": "http://nycserv.nyc.gov/NYCServWeb/ShowImage?searchID=VDBSQmQwNXFZM3BPZWtsNFRtYzlQUT09&locationName=_____________________", "description": "View Summons"}}
   {"plate": "GNR6165", "state": "NY", "license_type": "OMS", "summons_number": "8006737575", "issue_date": "11/28/2014", "violation_time": "11:42A", "violation": "NO PARKING-STREET CLEANING", "judgment_entry_date": "03/19/2015", "fine_amount": "45", "penalty_amount": "60", "interest_amount": "46.13", "reduction_amount": "0", "payment_amount": "0", "amount_due": "151.13", "precinct": "114", "county": "Q", "issuing_agency": "TRAFFIC", "summons_image": {"url": "http://nycserv.nyc.gov/NYCServWeb/ShowImage?searchID=VDBSQmQwNXFZM3BPZWxVelRsRTlQUT09&locationName=_____________________", "description": "View Summons"}}
   {"plate": "GBN2149", "state": "OH", "license_type": "PAS", "summons_number": "8006737782", "issue_date": "11/29/2014", "violation_time": "07:38A", "violation": "FAIL TO DSPLY MUNI METER RECPT", "judgment_entry_date": "03/19/2015", "fine_amount": "35", "penalty_amount": "60", "interest_amount": "41.01", "reduction_amount": "0", "payment_amount": "0", "amount_due": "136.01", "precinct": "109", "county": "Q", "issuing_agency": "TRAFFIC", "summons_image": {"url": "http://nycserv.nyc.gov/NYCServWeb/ShowImage?searchID=VDBSQmQwNXFZM3BPZW1NMFRXYzlQUT09&locationName=_____________________", "description": "View Summons"}}
-```
+  ```
+  
+  ---
+  
+  - `page_size=1`
+  - `num_pages=8`
+  - `output=./out/results.json`
   
   ```console
   $ sudo docker run -e APP_KEY=${APP_KEY} -v ${PWD}:/app/out -it jng985/bigdata1:2.0 python -m main --page_size=1 --num_pages=8 --output=./out/results.json && cat results.json | wc -l && cat results.json
@@ -388,8 +410,6 @@ Note: When using docker **within** the EC2 instance, the `sudo` command **must**
   ```
   
   
-  
-
 
 
 ## Part 2: Loading into ElasticSearch	

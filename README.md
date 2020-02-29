@@ -59,7 +59,7 @@
   - `docker run`
   
     - `-v $(pwd):/app`
-    - `-e APP_KEY={Insert Token Here}`
+    - `-e APP_KEY={*Insert Token Here*}`
     - `-it bigdata1:1.0 /bin/bash`
     
     

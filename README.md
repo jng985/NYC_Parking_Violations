@@ -104,9 +104,9 @@ def add_record(record, output):
   
     - `-t bigdata1:2.0`
     
-      ```console
-      $ docker build -t bigdata1:2.0 .
-      ```
+  ```console
+  $ docker build -t bigdata1:2.0 .
+  ```
 
   - `docker run`
   
@@ -115,14 +115,14 @@ def add_record(record, output):
     - `-it bigdata1:2.0 /bin/bash`
     
     
-      ```console
-      $ docker run -v $(pwd):/app -e APP_KEY=$soda_token -it bigdata1:2.0 /bin/bash
-      ```
-      ```console
-      $ docker run -v $(pwd):/app -e APP_KEY=$soda_token -it bigdata1:2.0 python -m main
-      ```
+  ```console
+  $ docker run -v $(pwd):/app -e APP_KEY=$soda_token -it bigdata1:2.0 /bin/bash
+  ```
+  ```console
+  $ docker run -v $(pwd):/app -e APP_KEY=$soda_token -it bigdata1:2.0 python -m main
+  ```
       
-    - `$soda_token` = environment variable set in `.bash_profile`
+  - `$soda_token` = environment variable set in `.bash_profile`
   
 ### Usage
 
@@ -213,6 +213,7 @@ Note: When using docker **within** the EC2 instance, the `sudo` command **must**
     - This loads the current working directory into the `out` directory within the docker container
   - `-it jng985/bigdata1:2.0`
   - `python -m main` 
+  
     - `--page_size={*Insert Page Size*}` 
     - `--num_pages={*Insert Num Pages*}`
     - `--output=./out/{*Insert Output Filename*}`
@@ -223,9 +224,9 @@ $ sudo docker run -e APP_KEY=${APP_KEY} -v ${PWD}:/app/out -it jng985/bigdata1:2
 
 - Checking the number of records in `results.json`
   - if `page_size` and `num_pages` are given, `page_size` * `num_pages` should be printed to stdout
-    ```console
-    $ cat results.json | wc -l
-    ```
+  ```console
+  $ cat results.json | wc -l
+  ```
 
 ## Part 2: Loading into ElasticSearch	
 

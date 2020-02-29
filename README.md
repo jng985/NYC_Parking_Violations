@@ -372,7 +372,9 @@ Note: When using docker **within** the EC2 instance, the `sudo` command **must**
   - `output=./out/results.json`
   
   ```console
-  $ sudo docker run -e APP_KEY=${APP_KEY} -v ${PWD}:/app/out -it jng985/bigdata1:2.0 python -m main --page_size=8 --num_pages=1 --output=./out/results.json && cat results.json | wc -l && cat results.json
+  $ sudo docker run -e APP_KEY=${APP_KEY} -v ${PWD}:/app/out -it jng985/bigdata1:2.0 python -m main --page_size=8 --num_pages=1 --output=./out/results.json 
+  $ cat results.json | wc -l 
+  $ cat results.json
   ```
   
   ```output
@@ -394,7 +396,9 @@ Note: When using docker **within** the EC2 instance, the `sudo` command **must**
   - `output=./out/results.json`
   
   ```console
-  $ sudo docker run -e APP_KEY=${APP_KEY} -v ${PWD}:/app/out -it jng985/bigdata1:2.0 python -m main --page_size=1 --num_pages=8 --output=./out/results.json && cat results.json | wc -l && cat results.json
+  $ sudo docker run -e APP_KEY=${APP_KEY} -v ${PWD}:/app/out -it jng985/bigdata1:2.0 python -m main --page_size=1 --num_pages=8 --output=./out/results.json 
+  $ cat results.json | wc -l 
+  $ cat results.json
   ```
   
   ```output

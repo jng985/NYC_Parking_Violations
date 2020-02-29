@@ -1,6 +1,6 @@
 import argparse
 
-from src.bigdata1.api import get_results, add_record
+from src.bigdata1.api import get_results
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()

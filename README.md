@@ -213,7 +213,7 @@ Note: When using docker **within** the EC2 instance, the `sudo` command **must**
   $ sudo docker pull jng985/bigdata1:2.0
   ```
 
-- Export environment variable `APP_KEY` if necessary
+- Export environment variable `APP_KEY`
   ```console
   $ export APP_KEY={*Insert App Token*}
   ```

@@ -22,6 +22,7 @@
 
 ### Packages 
 - Specified in `requirements.txt`
+
   - `requests`
   - `pandas`
   - `numpy`

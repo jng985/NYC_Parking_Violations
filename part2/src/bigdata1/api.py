@@ -8,7 +8,7 @@ data_id = 'nc67-uf89'
 client = Socrata('data.cityofnewyork.us', os.environ.get("APP_KEY"))
 count = int(client.get(data_id, select='COUNT(*)')[0]['COUNT'])
 
-def get_results(page_size, num_pages, output):
+def get_results(page_size, num_pages, output, push):
     if not num_pages:
         num_pages = count // page_size + 1
     if output:

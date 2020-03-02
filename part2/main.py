@@ -1,7 +1,6 @@
 import argparse
 
 from src.bigdata1.api import get_results
-from src.bigdata1.elastic import push_record
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()

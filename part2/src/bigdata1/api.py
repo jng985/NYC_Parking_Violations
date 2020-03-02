@@ -2,6 +2,7 @@ import os
 import json 
 import pprint
 from sodapy import Socrata
+from src.bigdata1.elastic import push_record
 
 data_id = 'nc67-uf89'
 client = Socrata('data.cityofnewyork.us', os.environ.get("APP_KEY"))
@@ -20,6 +21,8 @@ def get_results(page_size, num_pages, output):
                 add_record(record, output)
             else:
                 pprint.pprint(record, indent=4)
+            if push:
+                push_record(record, offset + i)
 
 def create_records(output):
     with open(output, 'w') as out_file:

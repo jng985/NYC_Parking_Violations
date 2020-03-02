@@ -418,6 +418,126 @@ Note: When using docker **within** the EC2 instance, the `sudo` command **must**
 
 ## Part 2: Loading into ElasticSearch	
 
+`requirements.txt`
+
+```
+requests
+pandas
+numpy
+sklearn
+pytest
+pyyaml
+matplotlib
+pygithub
+scipy
+sodapy
+pprint
+elasticsearch
+```
+
+`docker-compose.yml`
+
+```
+version: '3'
+services:
+  pyth:
+    network_mode: host
+    container_name: pyth
+    build:
+      context: .
+    volumes:
+      - .:/app:rw 
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.3.2
+    environment: 
+      - cluster.name=docker-cluster
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    expose: 
+      - "9200"
+    ports:
+      - "9200:9200"
+    
+  kibana:
+    image: docker.elastic.co/kibana/kibana:6.3.2
+    ports:
+      - "5601:5601"
+```
+
+`src/bigdata1/api.py`
+
+```py
+import os
+import json 
+import pprint
+from sodapy import Socrata
+from src.bigdata1.elastic import push_record
+
+data_id = 'nc67-uf89'
+client = Socrata('data.cityofnewyork.us', os.environ.get("APP_KEY"))
+count = int(client.get(data_id, select='COUNT(*)')[0]['COUNT'])
+
+def get_results(page_size, num_pages, output, push):
+    if not num_pages:
+        num_pages = count // page_size + 1
+    if output:
+        create_records(output)
+    for page in range(num_pages):
+        offset = page * page_size
+        page_records = client.get(data_id, limit=page_size, offset=offset)
+        for record in page_records:
+            if output:
+                add_record(record, output)
+            else:
+                pprint.pprint(record, indent=4)
+            if push:
+                push_record(record, offset + i)
+
+def create_records(output):
+    with open(output, 'w') as out_file:
+        pass
+
+def add_record(record, output):
+    with open(output, 'a') as out_file: 
+        out_file.write(json.dumps(record) + '\n')
+```
+
+`src/bigdata1/elastic.py`
+
+```py
+from datetime import datetime
+from elasticsearch import Elasticsearch
+
+def get_record_datetime(issue_date, violation_time):
+    record_dt = issue_date + violation_time + 'M'
+    dt = datetime.strptime(record_dt, '%m/%d/%Y%I:%M%p')
+    return dt
+
+def get_record_datetime(record):
+    issue_date = record['issue_date']
+    violation_time = record['violation_time']
+    dt_string = issue_date + violation_time + 'M'
+    dt = datetime.strptime(dt_string, '%m/%d/%Y%I:%M%p')
+    return dt
+
+es = Elasticsearch()
+
+def push_record(record, id):
+    # record = {"plate": "88040MH", "state": "NY", "license_type": "COM", "summons_number": "4008752961", "issue_date": "05/23/2018", "violation_time": "03:32P", "violation": "BUS LANE VIOLATION", "fine_amount": "115", "penalty_amount": "0", "interest_amount": "0", "reduction_amount": "0", "payment_amount": "115", "amount_due": "0", "precinct": "000", "county": "QN", "issuing_agency": "DEPARTMENT OF TRANSPORTATION", "summons_image": {"url": "http://nycserv.nyc.gov/NYCServWeb/ShowImage?searchID=VGtSQmQwOUVZekZOYW1zeVRWRTlQUT09&locationName=_____________________", "description": "View Summons"}}
+    record['timestamp'] = get_record_datetime(record)
+    index = 'violations'
+    doc_type = 'violation'
+    res = es.index(index=index, doc_type=doc_type, body=record, id=id)
+
+    # print(res['result'])
+
+    # res = es.get(index=index, doc_type=doc_type, id=1)
+    # print(res['_source'])
+```
 
 ## Part 3: Visualizing and Analysis on Kibana	
 

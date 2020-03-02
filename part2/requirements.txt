@@ -9,3 +9,4 @@ pygithub
 scipy
 sodapy
 pprint
+elasticsearch

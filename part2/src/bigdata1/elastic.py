@@ -26,8 +26,6 @@ def format_record(record):
             record[key] = float(value)
 
 
-
-
 def push_record(record, es):
     format_record(record)
     index = 'violations'

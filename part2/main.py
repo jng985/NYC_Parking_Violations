@@ -11,6 +11,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
     
     get_results(args.page_size, args.num_pages, args.output, args.push_elastic)
+
     
 
 

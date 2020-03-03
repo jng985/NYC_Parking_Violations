@@ -1,1 +1,4 @@
 results.json
+__pycache__/
+*.pyc
+results.json

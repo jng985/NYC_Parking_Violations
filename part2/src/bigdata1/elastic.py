@@ -1,28 +1,39 @@
 from datetime import datetime
 from elasticsearch import Elasticsearch
 
-def get_record_datetime(issue_date, violation_time):
-    record_dt = issue_date + violation_time + 'M'
-    dt = datetime.strptime(record_dt, '%m/%d/%Y%I:%M%p')
-    return dt
+def create_and_update_index(index_name, doc_type):
+    es = Elasticsearch()
+    try:
+        es.indices.create(index=index_name)
+        es.indices.put_mapping(index=index_name, doc_type=doc_type)
+    except Exception:
+        pass
 
-def get_record_datetime(record):
+    return es
+
+def format_record(record):
+    if 'violation_time' in record:
+        violation_time = record['violation_time']
+        if violation_time[:2] == '00':
+            violation_time = '12' + violation_time[2:]
+        record['violation_time'] = datetime.strptime(violation_time + 'M', '%I:%M%p')
+    
     issue_date = record['issue_date']
-    violation_time = record['violation_time']
-    dt_string = issue_date + violation_time + 'M'
-    dt = datetime.strptime(dt_string, '%m/%d/%Y%I:%M%p')
-    return dt
+    record['issue_date'] = datetime.strptime(issue_date, '%m/%d/%Y')
 
-es = Elasticsearch()
+    for key, value in record.items():
+        if 'amount' in key:
+            record[key] = float(value)
 
-def push_record(record, id):
-    # record = {"plate": "88040MH", "state": "NY", "license_type": "COM", "summons_number": "4008752961", "issue_date": "05/23/2018", "violation_time": "03:32P", "violation": "BUS LANE VIOLATION", "fine_amount": "115", "penalty_amount": "0", "interest_amount": "0", "reduction_amount": "0", "payment_amount": "115", "amount_due": "0", "precinct": "000", "county": "QN", "issuing_agency": "DEPARTMENT OF TRANSPORTATION", "summons_image": {"url": "http://nycserv.nyc.gov/NYCServWeb/ShowImage?searchID=VGtSQmQwOUVZekZOYW1zeVRWRTlQUT09&locationName=_____________________", "description": "View Summons"}}
-    record['timestamp'] = get_record_datetime(record)
+
+
+
+def push_record(record, es):
+    format_record(record)
     index = 'violations'
     doc_type = 'violation'
-    res = es.index(index=index, doc_type=doc_type, body=record, id=id)
+    
+    res = es.index(index=index, doc_type=doc_type, body=record)
+    print(res['result'])
 
-    # print(res['result'])
-
-    # res = es.get(index=index, doc_type=doc_type, id=1)
-    # print(res['_source'])
+   

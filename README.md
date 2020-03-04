@@ -600,6 +600,8 @@ def add_record(record, output):
   updated Summons_# 5092889469
   ...
   ```
+ 
+#### Querying ElasticSearch
   
 - `curl` requests
   

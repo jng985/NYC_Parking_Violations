@@ -4,8 +4,6 @@ import pprint
 from sodapy import Socrata
 from src.bigdata1.elastic import create_and_update_index, push_record
 
-
-
 data_id = 'nc67-uf89'
 client = Socrata('data.cityofnewyork.us', os.environ.get("APP_KEY"))
 count = int(client.get(data_id, select='COUNT(*)')[0]['COUNT'])
@@ -27,7 +25,6 @@ def get_results(page_size, num_pages, output, push_elastic):
                 pprint.pprint(record, indent=4)
             if push_elastic:
                 push_record(record, es, 'bigdata1', 'violations')
-
 
 def create_records(output):
     with open(output, 'w') as out_file:

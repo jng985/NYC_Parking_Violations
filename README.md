@@ -435,7 +435,7 @@ pprint
 elasticsearch
 ```
 
-- `docker-compose.yml`
+### `docker-compose.yml`
 
 ```
 version: '3'
@@ -467,6 +467,8 @@ services:
     ports:
       - "5601:5601"
 ```
+
+### Scripts
 
 - `src/bigdata1/elastic.py`
   - Script to handle formatting and pushing results to `elasticsearch/kibana`
@@ -544,7 +546,7 @@ def add_record(record, output):
         out_file.write(json.dumps(record) + '\n')
 ```
 
-- Docker
+### Elastic Search
 
   - Build ElasticSearch & Kibana service
 
@@ -564,7 +566,7 @@ def add_record(record, output):
   $ docker-compose down
   ```
 
-- Pushing to ElasticSearch
+#### Pushing to ElasticSearch
 
   - Run the ElasticSearch & Kibana service
 

@@ -1,0 +1,12 @@
+requests
+pandas
+numpy
+sklearn
+pytest
+pyyaml
+matplotlib
+pygithub
+scipy
+sodapy
+pprint
+elasticsearch

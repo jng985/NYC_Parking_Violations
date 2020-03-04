@@ -412,11 +412,247 @@ Note: When using docker **within** the EC2 instance, the `sudo` command **must**
   {"plate": "Y21HKL", "state": "NJ", "license_type": "PAS", "summons_number": "4641946670", "issue_date": "01/16/2018", "violation_time": "02:02P", "violation": "PHTO SCHOOL ZN SPEED VIOLATION", "judgment_entry_date": "04/12/2018", "fine_amount": "50", "penalty_amount": "25", "interest_amount": "0.01", "reduction_amount": "0", "payment_amount": "75.01", "amount_due": "0", "precinct": "000", "county": "BX", "issuing_agency": "DEPARTMENT OF TRANSPORTATION", "summons_image": {"url": "http://nycserv.nyc.gov/NYCServWeb/ShowImage?searchID=VGtSWk1FMVVhekJPYWxrelRVRTlQUT09&locationName=_____________________", "description": "View Summons"}}
   {"plate": "GWR4023", "state": "NY", "license_type": "PAS", "summons_number": "8706513694", "issue_date": "01/23/2019", "violation_time": "09:24A", "violation": "REG. STICKER-EXPIRED/MISSING", "judgment_entry_date": "06/13/2019", "fine_amount": "65", "penalty_amount": "60", "interest_amount": "7.75", "reduction_amount": "0", "payment_amount": "0", "amount_due": "132.75", "precinct": "122", "county": "R", "issuing_agency": "TRAFFIC", "violation_status": "HEARING HELD-GUILTY", "summons_image": {"url": "http://nycserv.nyc.gov/NYCServWeb/ShowImage?searchID=VDBSamQwNXFWWGhOZWxrMVRrRTlQUT09&locationName=_____________________", "description": "View Summons"}}
   ```
-  
-  
 
 
 ## Part 2: Loading into ElasticSearch	
+
+### File Structure
+
+- 2 new files created:
+  - `docker-compose.yml`
+  - `src/bigdata1/elastic.py`
+
+```console
+$ tree
+```
+
+```console
+.
+├── Dockerfile
+├── docker-compose.yml
+├── main.py
+├── requirements.txt
+└── src
+    └── bigdata1
+        ├── api.py
+        └── elastic.py
+```
+
+- `requirements.txt`
+
+  - Add `elasticsearch` to `requirements.txt`
+
+```
+requests
+pandas
+numpy
+sklearn
+pytest
+pyyaml
+matplotlib
+pygithub
+scipy
+sodapy
+pprint
+elasticsearch
+```
+
+### `docker-compose.yml`
+
+```
+version: '3'
+services:
+  pyth:
+    network_mode: host
+    container_name: pyth
+    build:
+      context: .
+    volumes:
+      - .:/app:rw 
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.3.2
+    environment: 
+      - cluster.name=docker-cluster
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    expose: 
+      - "9200"
+    ports:
+      - "9200:9200"
+    
+  kibana:
+    image: docker.elastic.co/kibana/kibana:6.3.2
+    ports:
+      - "5601:5601"
+```
+
+### Scripts
+
+- `src/bigdata1/elastic.py`
+  - Script to handle formatting and pushing results to `elasticsearch/kibana`
+  - Record Formatting:
+    - Changes fields containing `date` to a `date` object
+    - Changes fields containing `amount` to a `float` object
+  - Results are pushed to Elastic Search with the `summons_number` set as the `id`  
+  
+```py
+from datetime import datetime
+from elasticsearch import Elasticsearch
+
+def create_and_update_index(index_name, doc_type):
+    es = Elasticsearch()
+    try:
+        es.indices.create(index=index_name)
+        es.indices.put_mapping(index=index_name, doc_type=doc_type)
+    except:
+        pass
+    return es
+
+def format_record(record):
+    for key, value in record.items():
+        if 'amount' in key:
+            record[key] = float(value)
+        elif 'date' in key:
+            record[key] = datetime.strptime(record[key], '%m/%d/%Y').date()
+
+def push_record(record, es, index, doc_type):
+    format_record(record)
+    id = record['summons_number']
+    res = es.index(index=index, doc_type=doc_type, body=record, id=id)
+    print(res['result'], 'Summons_# %s' % id)
+```
+
+- `src/bigdata1/api.py`
+
+  - Add `push_elastic` argument to `get_results`
+
+```py
+import os
+import json 
+import pprint
+from sodapy import Socrata
+from src.bigdata1.elastic import create_and_update_index, push_record
+
+data_id = 'nc67-uf89'
+client = Socrata('data.cityofnewyork.us', os.environ.get("APP_KEY"))
+count = int(client.get(data_id, select='COUNT(*)')[0]['COUNT'])
+
+def get_results(page_size, num_pages, output, push_elastic):
+    if not num_pages:
+        num_pages = count // page_size + 1
+    if output:
+        create_records(output)
+    if push_elastic:
+        es = create_and_update_index('bigdata1', 'violations')
+    for page in range(num_pages):
+        offset = page * page_size
+        page_records = client.get(data_id, limit=page_size, offset=offset)
+        for record in page_records:
+            if output:
+                add_record(record, output)
+            else:
+                pprint.pprint(record, indent=4)
+            if push_elastic:
+                push_record(record, es, 'bigdata1', 'violations')
+
+def create_records(output):
+    with open(output, 'w') as out_file:
+        pass
+
+def add_record(record, output):
+    with open(output, 'a') as out_file: 
+        out_file.write(json.dumps(record) + '\n')
+```
+
+### Elastic Search
+
+  - Build ElasticSearch & Kibana service
+
+  ```console
+  $ docker-compose build pyth
+  ```
+
+  - Launch ElasticSearch & Kibana service
+
+  ```console
+  $ docker-compose up -d
+  ```
+
+  - Kill the ElasticSearch & Kibana service
+
+  ```console
+  $ docker-compose down
+  ```
+
+#### Pushing to ElasticSearch
+
+  - Run the ElasticSearch & Kibana service
+
+  ```console
+  $ docker-compose run -v ${PWD}:/app/out -e APP_KEY=$soda_token pyth /bin/bash
+  ```
+
+  - Within the container, run the `main.py` script **with** `--push_elastic=True`
+    - The following will push 10,000 records to ElasticSearch
+    
+  ```console
+  $ python -m main --page_size=100 --num_pages=100 --output=./out/results.json --push_elastic=True
+  ```
+  
+  - As the records are being pushed to ElasticSearch, the result is printed out along with the `summons_number` 
+  
+  ```console
+  created Summons_# 8764804069
+  created Summons_# 7925189009
+  created Summons_# 7925189083
+  created Summons_# 7925189095
+  created Summons_# 7925189113
+  ...
+  ```
+  
+  - If a record has already been previously pushed to ElasticSearch, the record is `updated`
+  
+  ```console
+  updated Summons_# 5032718385
+  updated Summons_# 5092889550
+  updated Summons_# 5092889469
+  ...
+  ```
+ 
+#### Querying ElasticSearch
+  
+- `curl` requests
+  
+  - After pushing records to ElasticSearch, we can query ElasticSearch as well using `curl`
+  
+  - Examples:
+  
+  ```console
+  $ curl http://localhost:9200/bigdata1/violations/_search?q=state:NY&size=5
+  ```
+  
+  ```console
+  [1] 90995
+  Jonathans-Air-2:part2 jon$ {"took":12,"timed_out":false,"_shards":{"total":5,"successful":5,"skipped":0,"failed":0},"hits":{"total":7931,"max_score":0.35082036,"hits":[{"_index":"bigdata1","_type":"violations","_id":"1426021276","_score":0.35082036,"_source":{"plate":"T700500C","state":"NY","license_type":"PAS","summons_number":"1426021276","issue_date":"2017-10-01","violation_time":"02:10A","violation":"FIRE HYDRANT","fine_amount":115.0,"penalty_amount":0.0,"interest_amount":0.0,"reduction_amount":0.0,"payment_amount":115.0,"amount_due":0.0,"precinct":"044","county":"BX","issuing_agency":"POLICE DEPARTMENT","summons_image":{"url":"http://nycserv.nyc.gov/NYCServWeb/ShowImage?searchID=VFZSUmVVNXFRWGxOVkVrelRtYzlQUT09&locationName=_____________________","description":"View Summons"}}},{"_index":"bigdata1","_type":"violations","_id":"4006494130","_score":0.35082036,"_source":{"plate":"EKH2561","state":"NY","license_type":"PAS","summons_number":"4006494130","issue_date":"2016-10-07","violation_time":"10:03A","violation":"BUS LANE VIOLATION","judgment_entry_date":"02/09/2017","fine_amount":115.0,"penalty_amount":25.0,"interest_amount":4.22,"reduction_amount":0.07,"payment_amount":144.15,"amount_due":0.0,"precinct":"000","county":"BK","issuing_agency":"DEPARTMENT OF TRANSPORTATION","summons_image":{"url":"http://nycserv.nyc.gov/NYCServWeb/ShowImage?searchID=VGtSQmQwNXFVVFZPUkVWNlRVRTlQUT09&locationName=_____________________","description":"View Summons"}}},{"_index":"bigdata1","_type":"violations","_id":"1426021926","_score":0.35082036,"_source":{"plate":"HFN4337","state":"NY","license_type":"PAS","summons_number":"1426021926","issue_date":"2017-09-30","violation_time":"02:22A","violation":"DOUBLE PARKING","fine_amount":115.0,"penalty_amount":10.0,"interest_amount":0.0,"reduction_amount":125.0,"payment_amount":0.0,"amount_due":0.0,"precinct":"044","county":"BX","issuing_agency":"POLICE DEPARTMENT","violation_status":"HEARING HELD-NOT GUILTY","summons_image":{"url":"http://nycserv.nyc.gov/NYCServWeb/ShowImage?searchID=VFZSUmVVNXFRWGxOVkd0NVRtYzlQUT09&locationName=_____________________","description":"View Summons"}}},{"_index":"bigdata1","_type":"violations","_id":"8659783475","_score":0.35082036,"_source":{"plate":"81256MG","state":"NY","license_type":"COM","summons_number":"8659783475","issue_date":"2018-08-29","violation_time":"04:05P","violation":"EXPIRED MUNI MTR-COMM MTR ZN","fine_amount":65.0,"penalty_amount":0.0,"interest_amount":0.0,"reduction_amount":13.0,"payment_amount":52.0,"amount_due":0.0,"precinct":"001","county":"NY","issuing_agency":"TRAFFIC","violation_status":"HEARING HELD-GUILTY REDUCTION","summons_image":{"url":"http://nycserv.nyc.gov/NYCServWeb/ShowImage?searchID=VDBSWk1VOVVZelJOZWxFelRsRTlQUT09&locationName=_____________________","description":"View Summons"}}},{"_index":"bigdata1","_type":"violations","_id":"4638573939","_score":0.35082036,"_source":{"plate":"HHW9630","state":"NY","license_type":"PAS","summons_number":"4638573939","issue_date":"2017-10-19","violation_time":"08:07A","violation":"PHTO SCHOOL ZN SPEED VIOLATION","fine_amount":50.0,"penalty_amount":0.0,"interest_amount":0.0,"reduction_amount":0.0,"payment_amount":50.0,"amount_due":0.0,"precinct":"000","county":"BK","issuing_agency":"DEPARTMENT OF TRANSPORTATION","summons_image":{"url":"http://nycserv.nyc.gov/NYCServWeb/ShowImage?searchID=VGtSWmVrOUVWVE5OZW10NlQxRTlQUT09&locationName=_____________________","description":"View Summons"}}},{"_index":"bigdata1","_type":"violations","_id":"1406538334","_score":0.35082036,"_source":{"plate":"HBN3750","state":"NY","license_type":"999","summons_number":"1406538334","issue_date":"2016-05-30","summons_image":{"url":"http://nycserv.nyc.gov/NYCServWeb/ShowImage?searchID=VFZSUmQwNXFWWHBQUkUxNlRrRTlQUT09&locationName=_____________________","description":"View Summons"}}},{"_index":"bigdata1","_type":"violations","_id":"4648086880","_score":0.35082036,"_source":{"plate":"HXE4959","state":"NY","license_type":"PAS","summons_number":"4648086880","issue_date":"2018-09-27","violation_time":"09:31A","violation":"PHTO SCHOOL ZN SPEED VIOLATION","fine_amount":50.0,"penalty_amount":0.0,"interest_amount":0.0,"reduction_amount":0.0,"payment_amount":50.0,"amount_due":0.0,"precinct":"000","county":"BK","issuing_agency":"DEPARTMENT OF TRANSPORTATION","summons_image":{"url":"http://nycserv.nyc.gov/NYCServWeb/ShowImage?searchID=VGtSWk1FOUVRVFJPYW1jMFRVRTlQUT09&locationName=_____________________","description":"View Summons"}}},{"_index":"bigdata1","_type":"violations","_id":"1426022736","_score":0.35082036,"_source":{"plate":"HNY4191","state":"NY","license_type":"PAS","summons_number":"1426022736","issue_date":"2017-10-01","violation_time":"08:24A","violation":"NON-COMPLIANCE W/ POSTED SIGN","fine_amount":60.0,"penalty_amount":10.0,"interest_amount":0.0,"reduction_amount":70.0,"payment_amount":0.0,"amount_due":0.0,"precinct":"044","county":"BX","issuing_agency":"POLICE DEPARTMENT","violation_status":"HEARING HELD-NOT GUILTY","summons_image":{"url":"http://nycserv.nyc.gov/NYCServWeb/ShowImage?searchID=VFZSUmVVNXFRWGxOYW1ONlRtYzlQUT09&locationName=_____________________","description":"View Summons"}}},{"_index":"bigdata1","_type":"violations","_id":"4648089686","_score":0.35082036,"_source":{"plate":"94136","state":"NY","license_type":"MED","summons_number":"4648089686","issue_date":"2018-09-21","violation_time":"03:28P","violation":"PHTO SCHOOL ZN SPEED VIOLATION","fine_amount":50.0,"penalty_amount":0.0,"interest_amount":0.0,"reduction_amount":0.0,"payment_amount":50.0,"amount_due":0.0,"precinct":"000","county":"BK","issuing_agency":"DEPARTMENT OF TRANSPORTATION","summons_image":{"url":"http://nycserv.nyc.gov/NYCServWeb/ShowImage?searchID=VGtSWk1FOUVRVFJQVkZrMFRtYzlQUT09&locationName=_____________________","description":"View Summons"}}},{"_index":"bigdata1","_type":"violations","_id":"1427047923","_score":0.35082036,"_source":{"plate":"HMU3056","state":"NY","license_type":"PAS","summons_number":"1427047923","issue_date":"2017-11-28","violation_time":"01:00A","violation":"NO PARKING-STREET CLEANING","judgment_entry_date":"03/15/2018","fine_amount":65.0,"penalty_amount":60.0,"interest_amount":0.93,"reduction_amount":0.09,"payment_amount":125.84,"amount_due":0.0,"precinct":"007","county":"NY","issuing_agency":"DEPARTMENT OF SANITATION","summons_image":{"url":"http://nycserv.nyc.gov/NYCServWeb/ShowImage?searchID=VFZSUmVVNTZRVEJPZW10NVRYYzlQUT09&locationName=_____________________","description":"View Summons"}}}]}}
+  [1]+  Done                    curl http://localhost:9200/bigdata1/violations/_search?q=state:NY
+  ```
+  
+  - Alternatively, to view the response in the browser, visit the url shown below
+    - http://localhost:9200/bigdata1/violations/_search?q=state:NY&size=5
+ 
+  ```output
+  {"took":18,"timed_out":false,"_shards":{"total":5,"successful":5,"skipped":0,"failed":0},"hits":{"total":7931,"max_score":0.35082036,"hits":[{"_index":"bigdata1","_type":"violations","_id":"1426021276","_score":0.35082036,"_source":{"plate":"T700500C","state":"NY","license_type":"PAS","summons_number":"1426021276","issue_date":"2017-10-01","violation_time":"02:10A","violation":"FIRE HYDRANT","fine_amount":115.0,"penalty_amount":0.0,"interest_amount":0.0,"reduction_amount":0.0,"payment_amount":115.0,"amount_due":0.0,"precinct":"044","county":"BX","issuing_agency":"POLICE DEPARTMENT","summons_image":{"url":"http://nycserv.nyc.gov/NYCServWeb/ShowImage?searchID=VFZSUmVVNXFRWGxOVkVrelRtYzlQUT09&locationName=_____________________","description":"View Summons"}}},{"_index":"bigdata1","_type":"violations","_id":"4006494130","_score":0.35082036,"_source":{"plate":"EKH2561","state":"NY","license_type":"PAS","summons_number":"4006494130","issue_date":"2016-10-07","violation_time":"10:03A","violation":"BUS LANE VIOLATION","judgment_entry_date":"02/09/2017","fine_amount":115.0,"penalty_amount":25.0,"interest_amount":4.22,"reduction_amount":0.07,"payment_amount":144.15,"amount_due":0.0,"precinct":"000","county":"BK","issuing_agency":"DEPARTMENT OF TRANSPORTATION","summons_image":{"url":"http://nycserv.nyc.gov/NYCServWeb/ShowImage?searchID=VGtSQmQwNXFVVFZPUkVWNlRVRTlQUT09&locationName=_____________________","description":"View Summons"}}},{"_index":"bigdata1","_type":"violations","_id":"1426021926","_score":0.35082036,"_source":{"plate":"HFN4337","state":"NY","license_type":"PAS","summons_number":"1426021926","issue_date":"2017-09-30","violation_time":"02:22A","violation":"DOUBLE PARKING","fine_amount":115.0,"penalty_amount":10.0,"interest_amount":0.0,"reduction_amount":125.0,"payment_amount":0.0,"amount_due":0.0,"precinct":"044","county":"BX","issuing_agency":"POLICE DEPARTMENT","violation_status":"HEARING HELD-NOT GUILTY","summons_image":{"url":"http://nycserv.nyc.gov/NYCServWeb/ShowImage?searchID=VFZSUmVVNXFRWGxOVkd0NVRtYzlQUT09&locationName=_____________________","description":"View Summons"}}},{"_index":"bigdata1","_type":"violations","_id":"8659783475","_score":0.35082036,"_source":{"plate":"81256MG","state":"NY","license_type":"COM","summons_number":"8659783475","issue_date":"2018-08-29","violation_time":"04:05P","violation":"EXPIRED MUNI MTR-COMM MTR ZN","fine_amount":65.0,"penalty_amount":0.0,"interest_amount":0.0,"reduction_amount":13.0,"payment_amount":52.0,"amount_due":0.0,"precinct":"001","county":"NY","issuing_agency":"TRAFFIC","violation_status":"HEARING HELD-GUILTY REDUCTION","summons_image":{"url":"http://nycserv.nyc.gov/NYCServWeb/ShowImage?searchID=VDBSWk1VOVVZelJOZWxFelRsRTlQUT09&locationName=_____________________","description":"View Summons"}}},{"_index":"bigdata1","_type":"violations","_id":"4638573939","_score":0.35082036,"_source":{"plate":"HHW9630","state":"NY","license_type":"PAS","summons_number":"4638573939","issue_date":"2017-10-19","violation_time":"08:07A","violation":"PHTO SCHOOL ZN SPEED VIOLATION","fine_amount":50.0,"penalty_amount":0.0,"interest_amount":0.0,"reduction_amount":0.0,"payment_amount":50.0,"amount_due":0.0,"precinct":"000","county":"BK","issuing_agency":"DEPARTMENT OF TRANSPORTATION","summons_image":{"url":"http://nycserv.nyc.gov/NYCServWeb/ShowImage?searchID=VGtSWmVrOUVWVE5OZW10NlQxRTlQUT09&locationName=_____________________","description":"View Summons"}}}]}}
+  ```
+  
+  ```console
+  $ curl http://localhost:9200/bigdata1/violations/_search?q=state:NJ&size=4
+  $ curl http://localhost:9200/bigdata1/violations/_search?q=amount_due:0.0&size=3
+  $ curl http://localhost:9200/bigdata1/violations/_search?q=issuing_agency:TRAFFIC&size=2
+  ```
 
 
 ## Part 3: Visualizing and Analysis on Kibana	

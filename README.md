@@ -418,6 +418,10 @@ Note: When using docker **within** the EC2 instance, the `sudo` command **must**
 
 ### File Structure
 
+- 2 new files created:
+  - `docker-compose.yml`
+  - `src/bigdata1/elastic.py`
+
 ```console
 $ tree
 ```

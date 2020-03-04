@@ -16,7 +16,7 @@ def get_results(page_size, num_pages, output, push_elastic):
     if output:
         create_records(output)
     if push_elastic:
-        es = create_and_update_index('parking_violations', 'violations')
+        es = create_and_update_index('bigdata1', 'violations')
     for page in range(num_pages):
         offset = page * page_size
         page_records = client.get(data_id, limit=page_size, offset=offset)
@@ -26,7 +26,7 @@ def get_results(page_size, num_pages, output, push_elastic):
             else:
                 pprint.pprint(record, indent=4)
             if push_elastic:
-                push_record(record, es)
+                push_record(record, es, 'bigdata1', 'violations')
 
 
 def create_records(output):

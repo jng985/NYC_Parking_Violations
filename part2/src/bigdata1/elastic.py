@@ -6,32 +6,21 @@ def create_and_update_index(index_name, doc_type):
     try:
         es.indices.create(index=index_name)
         es.indices.put_mapping(index=index_name, doc_type=doc_type)
-    except Exception:
+    except:
         pass
-
     return es
 
 def format_record(record):
-    if 'violation_time' in record:
-        violation_time = record['violation_time']
-        if violation_time[:2] == '00':
-            violation_time = '12' + violation_time[2:]
-        record['violation_time'] = datetime.strptime(violation_time + 'M', '%I:%M%p')
-    
-    issue_date = record['issue_date']
-    record['issue_date'] = datetime.strptime(issue_date, '%m/%d/%Y')
-
     for key, value in record.items():
         if 'amount' in key:
             record[key] = float(value)
+        elif 'date' in key:
+            record[key] = datetime.strptime(record[key], '%m/%d/%Y').date()
 
-
-def push_record(record, es):
+def push_record(record, es, index, doc_type):
     format_record(record)
-    index = 'violations'
-    doc_type = 'violation'
-    
-    res = es.index(index=index, doc_type=doc_type, body=record)
-    print(res['result'])
+    id = record['summons_number']
+    res = es.index(index=index, doc_type=doc_type, body=record, id=id)
+    print(res['result'], 'Summons_# %s' % id)
 
    

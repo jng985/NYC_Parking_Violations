@@ -416,6 +416,24 @@ Note: When using docker **within** the EC2 instance, the `sudo` command **must**
 
 ## Part 2: Loading into ElasticSearch	
 
+### File Structure
+
+```console
+$ tree
+```
+
+```console
+.
+├── Dockerfile
+├── docker-compose.yml
+├── main.py
+├── requirements.txt
+└── src
+    └── bigdata1
+        ├── api.py
+        └── elastic.py
+```
+
 - `requirements.txt`
 
   - Add `elasticsearch` to `requirements.txt`

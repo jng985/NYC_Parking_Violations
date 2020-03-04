@@ -593,9 +593,9 @@ def add_record(record, output):
   - If a record has already been previously pushed to ElasticSearch, the record is `updated`
   
   ```console
-  updated 5032718385
-  updated 5092889550
-  updated 5092889469
+  updated Summons_# 5032718385
+  updated Summons_# 5092889550
+  updated Summons_# 5092889469
   ...
   ```
   

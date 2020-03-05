@@ -654,12 +654,18 @@ def add_record(record, output):
   $ curl http://localhost:9200/bigdata1/violations/_search?q=issuing_agency:TRAFFIC&size=2
   ```
 
+## Part 3: Visualizing and Analysis on Kibana	
+
+- Visit http://localhost:5601 to launch Kibana
+
+- Create Index Pattern
+
 ![](/part2/imgs/elastic1.png)
+
+- Records from the past 5 years in Kibana
 
 ![](/part2/imgs/elastic2.png)
 
-
-## Part 3: Visualizing and Analysis on Kibana	
 
 
 ## Part 4: Deploying to EC2 Instance	

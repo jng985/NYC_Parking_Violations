@@ -656,9 +656,7 @@ def add_record(record, output):
 
 ![](/part2/elastic1.png)
 
-![](/part2/elastic2.png)
-
-<img src="part2/elastic1.png"/>
+![](parking_violations/part2/elastic2.png)
 
 
 ## Part 3: Visualizing and Analysis on Kibana	

@@ -654,9 +654,12 @@ def add_record(record, output):
   $ curl http://localhost:9200/bigdata1/violations/_search?q=issuing_agency:TRAFFIC&size=2
   ```
 
-![](part2/elastic1.png)
+![](/part2/elastic1.png)
 
-![](part2/elastic2.png)
+![](/part2/elastic2.png)
+
+<img src="part2/elastic1.png"/>
+
 
 ## Part 3: Visualizing and Analysis on Kibana	
 

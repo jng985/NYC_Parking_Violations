@@ -660,17 +660,29 @@ def add_record(record, output):
 
 - Create Index Pattern
 
-![](/part2/imgs/elastic1.png)
+![](/part3/imgs/kibana1.png)
 
 - Records from the past 5 years in Kibana
 
-![](/part2/imgs/elastic2.png)
+![](/part3/imgs/kibana2.png)
 
 ### Visualizations
 
 #### Pie Chart
 
 - Which agencies issue the most violations?
+
+![](/part3/imgs/V1.png)
+
+![](/part3/imgs/V2.png)
+
+![](/part3/imgs/V3.png)
+
+![](/part3/imgs/V4.png)
+
+![](/part3/imgs/D1.png)
+
+![](/part3/imgs/D2.png)
 
 #### Line Graph
 

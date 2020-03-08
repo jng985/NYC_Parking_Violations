@@ -666,6 +666,29 @@ def add_record(record, output):
 
 ![](/part2/imgs/elastic2.png)
 
+### Visualizations
+
+#### Pie Chart
+
+- Which agencies issue the most violations?
+
+#### Line Graph
+
+- Maximum and Average fine amount issued by month
+
+#### Horizontal Barchart
+
+- What are the most frequent types of violations issued?
+
+#### Word Cloud
+
+- Which License Types are given the highest fine amounts on average?
+
+#### The Dashboard
+
+Each of the 4 visualizations above can be combined into a single dashboard in Kibana. 
+
+
 
 
 ## Part 4: Deploying to EC2 Instance	

@@ -671,13 +671,19 @@ def add_record(record, output):
 
 #### Vertical Barchart
 
+- Number of Violations Issue by Issuing Agency
+
 ![](/part3/imgs/V1.png)
 
 #### Line Graph
 
+- Monthly Average of Fine Amount, Interest Amount, and Reduction Amount
+
 ![](/part3/imgs/V2.png)
 
 #### Pie Chart
+
+- Top 8 Most Frequent Violations
 
 ![](/part3/imgs/V3.png)
 

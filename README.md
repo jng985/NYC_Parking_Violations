@@ -621,14 +621,14 @@ def add_record(record, output):
   - Run the ElasticSearch & Kibana service
 
   ```console
-  $ docker-compose run -v ${PWD}:/app/out -e APP_KEY=$soda_token pyth /bin/bash
+  $ docker-compose up -d
   ```
 
-  - Within the container, run the `main.py` script **with** `--push_elastic=True`
+  - Run the `main.py` script **with** `--push_elastic=True`
     - The following will push 100,000 records to ElasticSearch
     
   ```console
-  $ python -m main --page_size=100 --num_pages=1000 --output=./out/results.json --push_elastic=True
+  $ docker-compose run -e APP_KEY=$soda_token -v ${PWD}:/app/out pyth python -m main --page_size=100 --num_pages=1000 --output=./out/results.json --push_elastic=True
   ```
  
 #### Querying ElasticSearch
@@ -640,11 +640,11 @@ def add_record(record, output):
   - The following command outputs the response of the curl request that returns 5 records from the state of New York to a file `output.txt`. This file is located in the `part2` folder in this repository.
   
   ```console
-  $ curl http://localhost:9200/bigdata1/violations/_search?q=state:NY&size=5 >> output.txt
+  $ curl -o output.txt http://localhost:9200/bigdata1/_search?q=state:NY&size=5 
   ```
 
   - Alternatively, to view the response in the browser, visit the url shown below
-    - http://localhost:9200/bigdata1/violations/_search?q=state:NY&size=5
+    - http://localhost:9200/bigdata1/_search?q=state:NY&size=5
  
   
 

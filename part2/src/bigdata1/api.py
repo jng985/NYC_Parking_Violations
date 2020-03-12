@@ -15,7 +15,7 @@ def get_results(page_size, num_pages, output, push_elastic):
     if output:
         create_records(output)
     if push_elastic:
-        es = create_and_update_index('bigdata1', 'violations')
+        es = create_and_update_index('bigdata1')
     for page in range(num_pages):
         offset = page * page_size
         try:
@@ -29,12 +29,7 @@ def get_results(page_size, num_pages, output, push_elastic):
             else:
                 pprint.pprint(record, indent=4)
             if push_elastic:
-                try:
-                    push_record(record, es, 'bigdata1', 'violations')
-                except:
-                    sleep(10)
-                    push_record(record, es, 'bigdata1', 'violations')
-
+                push_record(record, es, 'bigdata1')
 
 
 def create_records(output):

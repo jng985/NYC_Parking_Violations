@@ -1,11 +1,10 @@
-from datetime import datetime
+from datetime import datetime, date
 from elasticsearch import Elasticsearch
 
-def create_and_update_index(index_name, doc_type):
+def create_and_update_index(index_name):
     es = Elasticsearch()
     try:
         es.indices.create(index=index_name)
-        es.indices.put_mapping(index=index_name, doc_type=doc_type)
     except:
         pass
     return es
@@ -15,12 +14,18 @@ def format_record(record):
         if 'amount' in key:
             record[key] = float(value)
         elif 'date' in key:
-            record[key] = datetime.strptime(record[key], '%m/%d/%Y').date()
+            try:
+                record[key] = datetime.strptime(record[key], '%m/%d/%Y').date()
+            except:
+                m, d, y = map(int, record[key].split('/'))
+                if m == 2 and d == 29 and y % 4:
+                    m, d = 3, 1
+                    record[key] = datetime.date(y, m, d)
 
-def push_record(record, es, index, doc_type):
+def push_record(record, es, index):
     format_record(record)
-    id = record['summons_number']
-    res = es.index(index=index, doc_type=doc_type, body=record, id=id)
-    print(res['result'], 'Summons_# %s' % id)
+    res = es.index(index=index, body=record, id=record['summons_number'])
+    
+    
 
    

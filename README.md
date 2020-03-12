@@ -660,35 +660,49 @@ def add_record(record, output):
 
 - Create Index Pattern
 
-![](/part2/imgs/elastic1.png)
+![](/part3/imgs/kibana1.png)
 
 - Records from the past 5 years in Kibana
 
-![](/part2/imgs/elastic2.png)
+![](/part3/imgs/kibana3.png)
 
 ### Visualizations
 
-#### Pie Chart
 
-- Which agencies issue the most violations?
+#### Vertical Barchart
+
+- Number of Violations Issue by Issuing Agency
+
+![](/part3/imgs/V1.png)
 
 #### Line Graph
 
-- Maximum and Average fine amount issued by month
+- Monthly Average of Fine Amount, Interest Amount, and Reduction Amount
 
-#### Horizontal Barchart
+![](/part3/imgs/V2.png)
 
-- What are the most frequent types of violations issued?
+#### Pie Chart
+
+- Top 8 Most Frequent Violations
+
+![](/part3/imgs/V3.png)
 
 #### Word Cloud
 
 - Which License Types are given the highest fine amounts on average?
 
+![](/part3/imgs/V4.png)
+
+
 #### The Dashboard
 
-Each of the 4 visualizations above can be combined into a single dashboard in Kibana. 
+All 4 visualizations above can be combined into a single dashboard in Kibana. 
 
+![](/part3/imgs/D1.png)
 
+The dashboard updates when the time range is changed. Below it has been changed to show data from the past 4 years.
+
+![](/part3/imgs/D2.png)
 
 
 ## Part 4: Deploying to EC2 Instance	

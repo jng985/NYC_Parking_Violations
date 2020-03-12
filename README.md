@@ -492,6 +492,25 @@ services:
 
 ### Scripts
 
+- `main.py`
+  - The only change to `main.py` is adding the `push_elastic` command line argument.
+
+```py
+import argparse
+
+from src.bigdata1.api import get_results
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--page_size", type=int)
+    parser.add_argument("--num_pages", default=None, type=int)
+    parser.add_argument("--output", default=None)
+    parser.add_argument("--push_elastic", default=False, type=bool)
+    args = parser.parse_args()
+    
+    get_results(args.page_size, args.num_pages, args.output, args.push_elastic)
+```
+
 - `src/bigdata1/elastic.py`
   - Script to handle formatting and pushing results to `elasticsearch/kibana`
   - Record Formatting:
@@ -500,14 +519,13 @@ services:
   - Results are pushed to Elastic Search with the `summons_number` set as the `id`  
   
 ```py
-from datetime import datetime
+from datetime import datetime, date
 from elasticsearch import Elasticsearch
 
-def create_and_update_index(index_name, doc_type):
+def create_and_update_index(index_name):
     es = Elasticsearch()
     try:
         es.indices.create(index=index_name)
-        es.indices.put_mapping(index=index_name, doc_type=doc_type)
     except:
         pass
     return es
@@ -517,13 +535,17 @@ def format_record(record):
         if 'amount' in key:
             record[key] = float(value)
         elif 'date' in key:
-            record[key] = datetime.strptime(record[key], '%m/%d/%Y').date()
+            try:
+                record[key] = datetime.strptime(record[key], '%m/%d/%Y').date()
+            except:
+                m, d, y = map(int, record[key].split('/'))
+                if m == 2 and d == 29 and y % 4:
+                    m, d = 3, 1
+                    record[key] = datetime.date(y, m, d)
 
-def push_record(record, es, index, doc_type):
+def push_record(record, es, index):
     format_record(record)
-    id = record['summons_number']
-    res = es.index(index=index, doc_type=doc_type, body=record, id=id)
-    print(res['result'], 'Summons_# %s' % id)
+    res = es.index(index=index, body=record, id=record['summons_number'])
 ```
 
 - `src/bigdata1/api.py`
@@ -534,6 +556,7 @@ def push_record(record, es, index, doc_type):
 import os
 import json 
 import pprint
+from time import sleep
 from sodapy import Socrata
 from src.bigdata1.elastic import create_and_update_index, push_record
 
@@ -547,17 +570,22 @@ def get_results(page_size, num_pages, output, push_elastic):
     if output:
         create_records(output)
     if push_elastic:
-        es = create_and_update_index('bigdata1', 'violations')
+        es = create_and_update_index('bigdata1')
     for page in range(num_pages):
         offset = page * page_size
-        page_records = client.get(data_id, limit=page_size, offset=offset)
+        try:
+            page_records = client.get(data_id, limit=page_size, offset=offset)
+        except:
+            sleep(10)
+            page_records = client.get(data_id, limit=page_size, offset=offset)
         for record in page_records:
             if output:
                 add_record(record, output)
             else:
                 pprint.pprint(record, indent=4)
             if push_elastic:
-                push_record(record, es, 'bigdata1', 'violations')
+                push_record(record, es, 'bigdata1')
+
 
 def create_records(output):
     with open(output, 'w') as out_file:

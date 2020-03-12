@@ -597,30 +597,10 @@ def add_record(record, output):
   ```
 
   - Within the container, run the `main.py` script **with** `--push_elastic=True`
-    - The following will push 10,000 records to ElasticSearch
+    - The following will push 100,000 records to ElasticSearch
     
   ```console
-  $ python -m main --page_size=100 --num_pages=100 --output=./out/results.json --push_elastic=True
-  ```
-  
-  - As the records are being pushed to ElasticSearch, the result is printed out along with the `summons_number` 
-  
-  ```console
-  created Summons_# 8764804069
-  created Summons_# 7925189009
-  created Summons_# 7925189083
-  created Summons_# 7925189095
-  created Summons_# 7925189113
-  ...
-  ```
-  
-  - If a record has already been previously pushed to ElasticSearch, the record is `updated`
-  
-  ```console
-  updated Summons_# 5032718385
-  updated Summons_# 5092889550
-  updated Summons_# 5092889469
-  ...
+  $ python -m main --page_size=100 --num_pages=1000 --output=./out/results.json --push_elastic=True
   ```
  
 #### Querying ElasticSearch

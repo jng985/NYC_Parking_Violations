@@ -538,10 +538,14 @@ def format_record(record):
             try:
                 record[key] = datetime.strptime(record[key], '%m/%d/%Y').date()
             except:
-                m, d, y = map(int, record[key].split('/'))
-                if m == 2 and d == 29 and y % 4:
-                    m, d = 3, 1
-                    record[key] = datetime.date(y, m, d)
+                try:
+                    m, d, y = map(int, record[key].split('/'))
+                    if m == 2 and d == 29 and y % 4:
+                        m, d = 3, 1
+                        record[key] = datetime.date(y, m, d)
+                except:
+                    pass
+                  
 
 def push_record(record, es, index):
     format_record(record)

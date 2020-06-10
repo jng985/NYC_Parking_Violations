@@ -710,5 +710,4 @@ The dashboard updates when the time range is changed. Below it has been changed 
 ![](/part3/imgs/D2.png)
 
 
-## Part 4: Deploying to EC2 Instance	
 
